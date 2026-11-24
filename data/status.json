@@ -4,11 +4,13 @@
   "influenza": {
     "value": 5.07,
     "previous": 3.07,
-    "week": 46
+    "week": 46,
+    "tokyo": 7.72
   },
   "covid19": {
     "value": 0.79,
     "previous": 0.29,
-    "week": 46
+    "week": 46,
+    "tokyo": null
   }
 }
