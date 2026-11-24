@@ -10,7 +10,7 @@ data/status.json 生成スクリプト
 ・東京都全体 新型コロナ定点当たり報告数
 
 データ取得元
-・東京都西多摩保健所 感染症週報
+・東京都西多摩保健所 感染症週報PDF
 ・東京都感染症情報センター インフルエンザ患者報告数Excel
 ・東京都感染症情報センター 東京都感染症週報PDF
 
@@ -66,7 +66,7 @@ TOKYO_WEEKLY_PDF_BASE_URL = (
 
 USER_AGENT = (
     "Mozilla/5.0 "
-    "Nishitama-Infection-Signage/3.0"
+    "Nishitama-Infection-Signage/4.0"
 )
 
 
@@ -79,7 +79,6 @@ class LinkParser(HTMLParser):
 
     def __init__(self):
         super().__init__()
-
         self.links = []
         self.current_href = None
         self.current_text = []
@@ -89,7 +88,6 @@ class LinkParser(HTMLParser):
             return
 
         attributes = dict(attrs)
-
         self.current_href = attributes.get("href")
         self.current_text = []
 
@@ -105,9 +103,7 @@ class LinkParser(HTMLParser):
             self.links.append(
                 {
                     "href": self.current_href,
-                    "text": " ".join(
-                        self.current_text
-                    ),
+                    "text": " ".join(self.current_text),
                 }
             )
 
@@ -209,7 +205,7 @@ def fetch_text(url):
 # =============================================================================
 
 def normalize_text(value):
-    """文字列の全角記号と空白を正規化する。"""
+    """文字列の全角記号と横方向の空白を正規化する。"""
 
     if value is None:
         return ""
@@ -241,7 +237,7 @@ def normalize_text(value):
 
 
 def compact_text(value):
-    """解析用にすべての空白を除去する。"""
+    """解析用に空白をすべて除去する。"""
 
     return re.sub(
         r"\s+",
@@ -282,7 +278,7 @@ def extract_links(html, base_url):
 
 
 def number(value):
-    """数値、セル値、文字列をfloatへ変換する。"""
+    """セル値や文字列をfloatへ変換する。"""
 
     if (
         value is None
@@ -1368,6 +1364,15 @@ def get_tokyo_influenza_data():
         latest["sentinelCount"]
     )
 
+    record["previousReportedCases"] = (
+        previous["reportedCases"]
+        if previous
+        else None
+    )
+
+    record["_latestRaw"] = latest
+    record["_previousRaw"] = previous
+
     return record
 
 
@@ -1469,129 +1474,162 @@ def make_tokyo_weekly_pdf_url(year, week):
     )
 
 
-def find_tokyo_rate_section(pdf_text):
+def extract_table_row_values(
+    pdf_text,
+    row_label,
+    require_decimals,
+):
     """
-    東京都感染症週報から、
-    保健所別の定点医療機関当たり報告数表を取得する。
+    pypdfで抽出した表から指定行の数値を取得する。
+
+    次の両方に対応する。
+
+    Markdown風:
+    | 東京都 | 7.72 | 0.73 | 66.24 |
+
+    通常テキスト:
+    東京都 7.72 0.73 66.24
+
+    数値の区切りを保持するため、
+    compact_textは使用しない。
     """
 
-    compact = compact_text(
-        pdf_text
-    )
-
-    start_marker = (
-        "定点把握対象疾患"
-        "定点医療機関当たり報告数"
-        "【保健所別】"
-    )
-
-    start = compact.find(
-        start_marker
-    )
-
-    if start < 0:
-        start_marker = (
-            "定点把握対象疾患"
-            "定点医療機関当たり報告数"
-        )
-
-        start = compact.find(
-            start_marker
-        )
-
-    if start < 0:
-        raise ValueError(
-            "東京都感染症週報から"
-            "保健所別定点当たり報告数表を"
-            "検出できません"
-        )
-
-    end_markers = [
-        "定点把握対象疾患報告数【保健所別】",
-        "定点把握対象疾患報告数",
+    lines = [
+        normalize_text(line)
+        for line in pdf_text.splitlines()
+        if normalize_text(line)
     ]
 
-    end_candidates = []
+    candidates = []
 
-    for end_marker in end_markers:
-        position = compact.find(
-            end_marker,
-            start + len(start_marker),
+    for index, line in enumerate(lines):
+        if row_label not in line:
+            continue
+
+        if (
+            row_label == "東京都"
+            and "東京都合計" in line
+        ):
+            continue
+
+        nearby = " ".join(
+            lines[
+                index:
+                min(
+                    index + 3,
+                    len(lines),
+                )
+            ]
         )
 
-        if position >= 0:
-            end_candidates.append(position)
+        cleaned = (
+            nearby
+            .replace("|", " ")
+            .replace("\u3000", " ")
+        )
 
-    if end_candidates:
-        end = min(end_candidates)
-        return compact[start:end]
+        if require_decimals:
+            values = [
+                float(value)
+                for value in re.findall(
+                    r"(?<![\d.])"
+                    r"(\d+\.\d+)"
+                    r"(?![\d.])",
+                    cleaned,
+                )
+            ]
 
-    return compact[start:]
+        else:
+            values = [
+                int(
+                    value.replace(",", "")
+                )
+                for value in re.findall(
+                    r"(?<![\d.])"
+                    r"(\d{1,3}(?:,\d{3})+|\d+)"
+                    r"(?![\d.])",
+                    cleaned,
+                )
+            ]
+
+        if len(values) < 2:
+            continue
+
+        candidates.append(
+            {
+                "index": index,
+                "line": nearby,
+                "values": values,
+            }
+        )
+
+    if not candidates:
+        raise ValueError(
+            "東京都感染症週報から"
+            f"{row_label}行を取得できません"
+        )
+
+    return candidates
 
 
-def extract_tokyo_covid_rate(pdf_text):
+def select_tokyo_respiratory_row(
+    candidates,
+    influenza_reference=None,
+):
     """
-    東京都感染症週報から東京都全体の
-    新型コロナ定点当たり報告数を取得する。
+    東京都行または東京都合計行のうち、
+    インフルエンザ・新型コロナ・ARIが並ぶ行を特定する。
 
-    対象行の列順:
-    東京都
+    定点値:
+    東京都 7.72 0.73 66.24
+
+    報告数:
+    東京都合計 3,234 307 27,753
+    """
+
+    if influenza_reference is not None:
+        matched = [
+            candidate
+            for candidate in candidates
+            if (
+                candidate["values"]
+                and abs(
+                    candidate["values"][0]
+                    - influenza_reference
+                ) < 0.02
+            )
+        ]
+
+        if matched:
+            return matched[-1]
+
+    return candidates[-1]
+
+
+def extract_tokyo_covid_rate(
+    pdf_text,
+    influenza_reference=None,
+):
+    """
+    東京都全体の新型コロナ定点当たり報告数を取得する。
+
+    呼吸器系の東京都行の列順:
     1列目 インフルエンザ
     2列目 新型コロナ
     3列目 急性呼吸器感染症
     """
 
-    section = find_tokyo_rate_section(
-        pdf_text
+    candidates = extract_table_row_values(
+        pdf_text=pdf_text,
+        row_label="東京都",
+        require_decimals=True,
     )
 
-    candidates = []
-
-    for match in re.finditer(
-        r"東京都(?!合計)",
-        section,
-    ):
-        nearby = section[
-            match.end():
-            match.end() + 250
-        ]
-
-        values = [
-            float(value)
-            for value in re.findall(
-                r"(?<![\d.])"
-                r"(\d+\.\d+)"
-                r"(?![\d.])",
-                nearby,
-            )
-        ]
-
-        if len(values) < 2:
-            continue
-
-        influenza_value = values[0]
-        covid_value = values[1]
-
-        if not (
-            0 <= influenza_value <= 500
-            and 0 <= covid_value <= 100
-        ):
-            continue
-
-        candidates.append(
-            {
-                "influenza": round(
-                    influenza_value,
-                    2,
-                ),
-                "covid19": round(
-                    covid_value,
-                    2,
-                ),
-                "values": values[:12],
-                "nearby": nearby[:250],
-            }
-        )
+    candidates = [
+        candidate
+        for candidate in candidates
+        if len(candidate["values"]) >= 3
+    ]
 
     if not candidates:
         raise ValueError(
@@ -1600,106 +1638,181 @@ def extract_tokyo_covid_rate(pdf_text):
             "取得できません"
         )
 
-    # 小児科系の東京都行が先にあり、
-    # インフルエンザ・コロナ系の東京都行が後にあるため、
-    # 最後の有効候補を採用する。
-    selected = candidates[-1]
-
-    print(
-        "東京都定点値・採用候補:",
-        json.dumps(
-            selected,
-            ensure_ascii=False,
-        ),
+    selected = select_tokyo_respiratory_row(
+        candidates,
+        influenza_reference=influenza_reference,
     )
 
-    return selected["covid19"]
+    values = selected["values"]
+
+    influenza_value = round(
+        values[0],
+        2,
+    )
+
+    covid_value = round(
+        values[1],
+        2,
+    )
+
+    ari_value = round(
+        values[2],
+        2,
+    )
+
+    if not (
+        0 <= influenza_value <= 500
+        and 0 <= covid_value <= 100
+        and 0 <= ari_value <= 1000
+    ):
+        raise ValueError(
+            "東京都の定点値が想定範囲外です: "
+            f"{values[:3]}"
+        )
+
+    if (
+        influenza_reference is not None
+        and abs(
+            influenza_value
+            - influenza_reference
+        ) >= 0.02
+    ):
+        raise ValueError(
+            "東京都感染症週報の"
+            "インフルエンザ値がExcelと一致しません: "
+            f"PDF={influenza_value}, "
+            f"Excel={influenza_reference}"
+        )
+
+    print(
+        "東京都定点値・採用行:",
+        selected["line"],
+    )
+
+    print(
+        "東京都インフルエンザ:",
+        influenza_value,
+    )
+
+    print(
+        "東京都新型コロナ:",
+        covid_value,
+    )
+
+    print(
+        "東京都ARI:",
+        ari_value,
+    )
+
+    return covid_value
 
 
-def extract_tokyo_covid_reported_cases(pdf_text):
+def extract_tokyo_covid_reported_cases(
+    pdf_text,
+    influenza_reference=None,
+):
     """
-    東京都感染症週報から東京都全体の
-    新型コロナ報告数を取得する。
+    東京都全体の新型コロナ報告数を取得する。
 
-    対象行の列順:
-    東京都合計
+    呼吸器系の東京都合計行の列順:
     1列目 インフルエンザ
     2列目 新型コロナ
     3列目 急性呼吸器感染症
     """
 
-    compact = compact_text(
-        pdf_text
-    )
-
-    candidates = []
-
-    for match in re.finditer(
-        r"東京都合計",
-        compact,
-    ):
-        nearby = compact[
-            match.end():
-            match.end() + 220
-        ]
-
-        values = [
-            int(value.replace(",", ""))
-            for value in re.findall(
-                r"(?<![\d.])"
-                r"(\d{1,3}(?:,\d{3})+|\d+)"
-                r"(?![\d.])",
-                nearby,
-            )
-        ]
-
-        if len(values) < 2:
-            continue
-
-        influenza_count = values[0]
-        covid_count = values[1]
-
-        if not (
-            0 <= influenza_count <= 1000000
-            and 0 <= covid_count <= 1000000
-        ):
-            continue
-
-        candidates.append(
-            {
-                "influenza": influenza_count,
-                "covid19": covid_count,
-                "values": values[:12],
-            }
+    try:
+        candidates = extract_table_row_values(
+            pdf_text=pdf_text,
+            row_label="東京都合計",
+            require_decimals=False,
         )
 
-    if not candidates:
+    except ValueError as error:
         print(
-            "東京都新型コロナ報告数を"
-            "取得できませんでした"
+            "東京都新型コロナ報告数取得エラー:",
+            repr(error),
         )
 
         return None
 
-    # インフルエンザ・コロナ系の東京都合計行は
-    # PDF後半に掲載されるため最後の候補を採用する。
-    selected = candidates[-1]
+    candidates = [
+        candidate
+        for candidate in candidates
+        if len(candidate["values"]) >= 3
+    ]
 
-    print(
-        "東京都報告数・採用候補:",
-        json.dumps(
-            selected,
-            ensure_ascii=False,
-        ),
+    if not candidates:
+        return None
+
+    selected = select_tokyo_respiratory_row(
+        candidates,
+        influenza_reference=influenza_reference,
     )
 
-    return selected["covid19"]
+    values = selected["values"]
+
+    influenza_count = values[0]
+    covid_count = values[1]
+    ari_count = values[2]
+
+    if not (
+        0 <= influenza_count <= 1000000
+        and 0 <= covid_count <= 1000000
+        and 0 <= ari_count <= 1000000
+    ):
+        print(
+            "東京都報告数が想定範囲外:",
+            values[:3],
+        )
+
+        return None
+
+    if (
+        influenza_reference is not None
+        and influenza_count != influenza_reference
+    ):
+        print(
+            "東京都インフル報告数の照合不一致:",
+            {
+                "PDF": influenza_count,
+                "Excel": influenza_reference,
+            },
+        )
+
+    print(
+        "東京都報告数・採用行:",
+        selected["line"],
+    )
+
+    print(
+        "東京都インフルエンザ報告数:",
+        influenza_count,
+    )
+
+    print(
+        "東京都新型コロナ報告数:",
+        covid_count,
+    )
+
+    print(
+        "東京都ARI報告数:",
+        ari_count,
+    )
+
+    return covid_count
 
 
-def get_tokyo_covid19_data():
+def get_tokyo_covid19_data(
+    current_flu_value,
+    previous_flu_value,
+    current_flu_cases=None,
+):
     """
     最新週と前週の東京都感染症週報PDFから
     東京都全体の新型コロナ情報を取得する。
+
+    東京都インフルエンザExcelの値を照合に使用し、
+    小児科系の東京都行を誤採用しないようにする。
     """
 
     page_html = fetch_text(
@@ -1719,12 +1832,14 @@ def get_tokyo_covid19_data():
     )
 
     current_value = extract_tokyo_covid_rate(
-        latest_pdf_text
+        pdf_text=latest_pdf_text,
+        influenza_reference=current_flu_value,
     )
 
     reported_cases = (
         extract_tokyo_covid_reported_cases(
-            latest_pdf_text
+            pdf_text=latest_pdf_text,
+            influenza_reference=current_flu_cases,
         )
     )
 
@@ -1754,7 +1869,8 @@ def get_tokyo_covid19_data():
     )
 
     previous_value = extract_tokyo_covid_rate(
-        previous_pdf_text
+        pdf_text=previous_pdf_text,
+        influenza_reference=previous_flu_value,
     )
 
     record = make_record(
@@ -1854,9 +1970,42 @@ def main():
     # 東京都インフルエンザ
     # -------------------------------------------------------------------------
 
+    tokyo_flu_current_value = None
+    tokyo_flu_previous_value = None
+    tokyo_flu_current_cases = None
+
     try:
         tokyo_influenza = (
             get_tokyo_influenza_data()
+        )
+
+        tokyo_flu_current_value = (
+            tokyo_influenza.get(
+                "perSentinel"
+            )
+        )
+
+        tokyo_flu_previous_value = (
+            tokyo_influenza.get(
+                "previousPerSentinel"
+            )
+        )
+
+        tokyo_flu_current_cases = (
+            tokyo_influenza.get(
+                "reportedCases"
+            )
+        )
+
+        # 内部照合用データはstatus.jsonに出さない。
+        tokyo_influenza.pop(
+            "_latestRaw",
+            None,
+        )
+
+        tokyo_influenza.pop(
+            "_previousRaw",
+            None,
         )
 
     except Exception as error:
@@ -1876,6 +2025,24 @@ def main():
             source_url=TOKYO_FLU_TOP_URL,
         )
 
+        tokyo_flu_current_value = (
+            tokyo_influenza.get(
+                "perSentinel"
+            )
+        )
+
+        tokyo_flu_previous_value = (
+            tokyo_influenza.get(
+                "previousPerSentinel"
+            )
+        )
+
+        tokyo_flu_current_cases = (
+            tokyo_influenza.get(
+                "reportedCases"
+            )
+        )
+
         debug["tokyoInfluenza"] = {
             "errorType": type(error).__name__,
             "errorMessage": str(error),
@@ -1887,8 +2054,35 @@ def main():
     # -------------------------------------------------------------------------
 
     try:
-        tokyo_covid19 = (
-            get_tokyo_covid19_data()
+        if tokyo_flu_current_value is None:
+            raise ValueError(
+                "東京都コロナ抽出の照合に必要な"
+                "東京都インフルエンザ最新値がありません"
+            )
+
+        if tokyo_flu_previous_value is None:
+            raise ValueError(
+                "東京都コロナ前週抽出の照合に必要な"
+                "東京都インフルエンザ前週値がありません"
+            )
+
+        tokyo_covid19 = get_tokyo_covid19_data(
+            current_flu_value=(
+                float(
+                    tokyo_flu_current_value
+                )
+            ),
+            previous_flu_value=(
+                float(
+                    tokyo_flu_previous_value
+                )
+            ),
+            current_flu_cases=(
+                int(tokyo_flu_current_cases)
+                if tokyo_flu_current_cases
+                is not None
+                else None
+            ),
         )
 
         debug["tokyoCovid19"] = {
@@ -1919,6 +2113,12 @@ def main():
                     "reportedCases"
                 )
             ),
+            "fluReference": (
+                tokyo_flu_current_value
+            ),
+            "previousFluReference": (
+                tokyo_flu_previous_value
+            ),
         }
 
     except Exception as error:
@@ -1942,6 +2142,12 @@ def main():
             "errorType": type(error).__name__,
             "errorMessage": str(error),
             "fallback": "previousStatus",
+            "fluReference": (
+                tokyo_flu_current_value
+            ),
+            "previousFluReference": (
+                tokyo_flu_previous_value
+            ),
         }
 
     # -------------------------------------------------------------------------
@@ -1992,14 +2198,14 @@ def main():
         encoding="utf-8",
     )
 
-    # 書き出したファイルが正常なJSONか確認する。
+    # 正常なJSONとして読み込めることを確認する。
     json.loads(
         temporary_file.read_text(
             encoding="utf-8"
         )
     )
 
-    # 正常なJSONの場合だけstatus.jsonへ置き換える。
+    # 正常な場合だけstatus.jsonへ置き換える。
     temporary_file.replace(
         STATUS_FILE
     )
