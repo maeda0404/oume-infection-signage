@@ -1,6 +1,6 @@
 {
-  "updated": "2026-11-24 10:31",
-  "sourceStatus": "正常",
+  "updated": "2026-11-24 11:00",
+  "sourceStatus": "一部取得失敗：東京都新型コロナ",
   "area": {
     "displayName": "西多摩地域",
     "dataArea": "西多摩保健所管内"
@@ -63,8 +63,8 @@
       "difference": null,
       "trend": "公式情報を確認中",
       "provisional": true,
-      "dataStatus": "取得元確認中",
-      "sourceUrl": "https://idsc.tmiph.metro.tokyo.lg.jp/"
+      "dataStatus": "取得失敗",
+      "sourceUrl": "https://idsc.tmiph.metro.tokyo.lg.jp/weekly/"
     }
   },
   "debug": {
@@ -78,6 +78,11 @@
       "influenzaPrevious": 3.07,
       "covid19Value": 0.79,
       "covid19Previous": 0.29
+    },
+    "tokyoCovid19": {
+      "errorType": "ValueError",
+      "errorMessage": "東京都感染症週報から新型コロナの定点当たり報告数を取得できません",
+      "fallback": "previousStatus"
     }
   }
 }
