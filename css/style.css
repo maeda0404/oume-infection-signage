@@ -124,8 +124,7 @@ main {
 
 /* =========================================================
    中央ステータス外枠
-
-   外枠と内側カードの余白は元の設定を維持
+   ここは既存位置を維持
 ========================================================= */
 
 .status {
@@ -174,8 +173,6 @@ main {
 
 /* =========================================================
    疾患カード
-
-   カード内部を上から下まで使用する
 ========================================================= */
 
 .disease-card {
@@ -198,12 +195,6 @@ main {
   display: flex;
   flex-direction: column;
 
-  /*
-    中央に固めず、
-    カード全体へ情報を縦方向に配置
-  */
-  justify-content: space-between;
-
   min-height: 0;
 
   transition:
@@ -214,13 +205,12 @@ main {
 
 /* =========================================================
    疾患名
+
+   現在の位置を維持
 ========================================================= */
 
 .disease-card h2 {
-  margin:
-    0
-    0
-    12px;
+  margin: 0;
 
   font-size: 46px;
   line-height: 1.08;
@@ -228,11 +218,16 @@ main {
   font-weight: 700;
 
   letter-spacing: 0.01em;
+
+  flex-shrink: 0;
 }
 
 
 /* =========================================================
-   流行中 / 非流行の帯
+   流行中 / 非流行
+
+   疾患名の位置は変えず、
+   帯だけ少し下へ
 ========================================================= */
 
 .level-badge {
@@ -263,12 +258,19 @@ main {
 
   letter-spacing: 0.02em;
 
-  margin-bottom: 12px;
+  /*
+    疾患名から少し離す
+  */
+  margin-top: 20px;
+
+  flex-shrink: 0;
 }
 
 
 /* =========================================================
    メイン数値
+
+   帯よりさらに下へ
 ========================================================= */
 
 .value {
@@ -278,9 +280,11 @@ main {
   align-items: baseline;
 
   margin:
-    14px
+    30px
     0
-    8px;
+    0;
+
+  flex-shrink: 0;
 }
 
 .value strong {
@@ -312,6 +316,8 @@ main {
 
 /* =========================================================
    定点当たり報告数
+
+   数字との間隔を確保
 ========================================================= */
 
 .caption {
@@ -321,12 +327,16 @@ main {
 
   line-height: 1.25;
 
-  margin-top: 4px;
+  margin-top: 14px;
+
+  flex-shrink: 0;
 }
 
 
 /* =========================================================
    前週比較
+
+   さらに少し下へ
 ========================================================= */
 
 .trend {
@@ -336,9 +346,11 @@ main {
 
   line-height: 1.2;
 
-  margin-top: 20px;
+  margin-top: 26px;
 
   font-variant-numeric: tabular-nums;
+
+  flex-shrink: 0;
 }
 
 
@@ -353,14 +365,17 @@ main {
 
   line-height: 1.2;
 
-  margin-top: 8px;
+  margin-top: 12px;
+
+  flex-shrink: 0;
 }
 
 
 /* =========================================================
    東京都
 
-   カード最下部側をしっかり使用する
+   現在の良い位置を維持。
+   margin-top:auto で最下部側に固定。
 ========================================================= */
 
 .tokyo-row {
@@ -379,6 +394,8 @@ main {
   font-weight: 600;
 
   line-height: 1.25;
+
+  flex-shrink: 0;
 }
 
 .tokyo-row strong {
@@ -585,6 +602,12 @@ footer {
       20px;
 
     font-size: 25px;
+
+    margin-top: 16px;
+  }
+
+  .value {
+    margin-top: 22px;
   }
 
   .value strong {
@@ -597,16 +620,20 @@ footer {
 
   .caption {
     font-size: 23px;
+
+    margin-top: 10px;
   }
 
   .trend {
     font-size: 27px;
 
-    margin-top: 14px;
+    margin-top: 20px;
   }
 
   .week {
     font-size: 20px;
+
+    margin-top: 9px;
   }
 
   .tokyo-row {
@@ -661,9 +688,6 @@ footer {
   .status {
     margin: 10px;
 
-    /*
-      モバイルでも外側余白を確保
-    */
     padding:
       20px
       12px
@@ -693,6 +717,12 @@ footer {
     min-height: 52px;
 
     font-size: 27px;
+
+    margin-top: 18px;
+  }
+
+  .value {
+    margin-top: 24px;
   }
 
   .value strong {
@@ -705,14 +735,20 @@ footer {
 
   .caption {
     font-size: 24px;
+
+    margin-top: 10px;
   }
 
   .trend {
     font-size: 28px;
+
+    margin-top: 20px;
   }
 
   .week {
     font-size: 21px;
+
+    margin-top: 9px;
   }
 
   .tokyo-row {
