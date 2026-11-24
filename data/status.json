@@ -1,16 +1,83 @@
 {
-  "area": "西多摩地域",
-  "dataStatus": "サンプルデータ",
-  "influenza": {
-    "value": 5.07,
-    "previous": 3.07,
-    "week": 46,
-    "tokyo": 7.72
+  "updated": "2026-11-24 10:31",
+  "sourceStatus": "正常",
+  "area": {
+    "displayName": "西多摩地域",
+    "dataArea": "西多摩保健所管内"
   },
-  "covid19": {
-    "value": 0.79,
-    "previous": 0.29,
-    "week": 46,
-    "tokyo": null
+  "nishitama": {
+    "influenza": {
+      "level": "流行中",
+      "year": 2026,
+      "week": "第46週",
+      "weekNumber": 46,
+      "period": "11月9日～11月15日",
+      "perSentinel": 5.07,
+      "previousPerSentinel": 3.07,
+      "difference": 2.0,
+      "trend": "西多摩保健所感染症週報",
+      "provisional": true,
+      "dataStatus": "取得成功",
+      "sourceUrl": "https://www.hokeniryo.metro.tokyo.lg.jp/documents/d/hokeniryo/2026-11-18-134524-962"
+    },
+    "covid19": {
+      "level": "非流行",
+      "year": 2026,
+      "week": "第46週",
+      "weekNumber": 46,
+      "period": "11月9日～11月15日",
+      "perSentinel": 0.79,
+      "previousPerSentinel": 0.29,
+      "difference": 0.5,
+      "trend": "西多摩保健所感染症週報",
+      "provisional": true,
+      "dataStatus": "取得成功",
+      "sourceUrl": "https://www.hokeniryo.metro.tokyo.lg.jp/documents/d/hokeniryo/2026-11-18-134524-962"
+    }
+  },
+  "tokyo": {
+    "influenza": {
+      "level": "流行中",
+      "year": 2026,
+      "week": "第46週",
+      "weekNumber": 46,
+      "period": "11月9日～11月15日",
+      "perSentinel": 7.72,
+      "previousPerSentinel": 7.44,
+      "difference": 0.28,
+      "trend": "東京都感染症情報センター",
+      "provisional": true,
+      "dataStatus": "取得成功",
+      "sourceUrl": "https://idsc.tmiph.metro.tokyo.lg.jp/assets/diseases/flu/2026/2026hasseidoko.xlsx",
+      "reportedCases": 3234,
+      "sentinelCount": 419
+    },
+    "covid19": {
+      "level": "確認中",
+      "year": null,
+      "week": "最新発表",
+      "weekNumber": null,
+      "period": "確認中",
+      "perSentinel": null,
+      "previousPerSentinel": null,
+      "difference": null,
+      "trend": "公式情報を確認中",
+      "provisional": true,
+      "dataStatus": "取得元確認中",
+      "sourceUrl": "https://idsc.tmiph.metro.tokyo.lg.jp/"
+    }
+  },
+  "debug": {
+    "nishitama": {
+      "reportPageUrl": "https://www.hokeniryo.metro.tokyo.lg.jp/documents/d/hokeniryo/2026-11-18-134524-962",
+      "sourceUrl": "https://www.hokeniryo.metro.tokyo.lg.jp/documents/d/hokeniryo/2026-11-18-134524-962",
+      "year": 2026,
+      "week": 46,
+      "period": "11月9日～11月15日",
+      "influenzaValue": 5.07,
+      "influenzaPrevious": 3.07,
+      "covid19Value": 0.79,
+      "covid19Previous": 0.29
+    }
   }
 }
