@@ -16,6 +16,11 @@ on:
 permissions:
   contents: write
 
+# 同じ更新処理が重ならないようにする
+concurrency:
+  group: update-infection-status
+  cancel-in-progress: false
+
 jobs:
   update-status:
     runs-on: ubuntu-latest
@@ -23,6 +28,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -55,4 +63,21 @@ jobs:
           fi
 
           git commit -m "Update infection status"
-          git push
+
+          # Action実行中にmainが更新されていても取り込む
+          git pull --rebase origin main
+
+          # push競合時は最新状態を取り込んで再試行
+          for attempt in 1 2 3; do
+            if git push origin HEAD:main; then
+              echo "status.json pushed successfully"
+              exit 0
+            fi
+
+            echo "Push failed: retry ${attempt}/3"
+            git pull --rebase origin main
+            sleep 5
+          done
+
+          echo "Failed to push status.json after 3 attempts"
+          exit 1
