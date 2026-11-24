@@ -32,9 +32,6 @@ body {
 
 /* =========================================================
    表示領域
-
-   1920 x 1080 の完成レイアウトを中央配置し、
-   JavaScript側で画面サイズに合わせて全体をscaleする
 ========================================================= */
 
 .viewport {
@@ -46,14 +43,13 @@ body {
     justify-content: center;
 
     overflow: hidden;
+
     background: #f4f9fc;
 }
 
 
 /* =========================================================
-   全体
-
-   ここを1920 x 1080の固定キャンバスとして扱う
+   1920 × 1080 基準キャンバス
 ========================================================= */
 
 .screen {
@@ -65,9 +61,9 @@ body {
     display: grid;
 
     grid-template-rows:
-        68px
+        78px
         1fr
-        62px;
+        68px;
 
     overflow: hidden;
 
@@ -97,12 +93,12 @@ header {
 header h1 {
     margin: 0;
 
-    font-size: 42px;
+    font-size: 50px;
     line-height: 1;
 
-    font-weight: 700;
+    font-weight: 800;
 
-    letter-spacing: 0.01em;
+    letter-spacing: 0.015em;
 
     white-space: nowrap;
 }
@@ -230,7 +226,7 @@ main {
     text-align: center;
 
     padding:
-        22px
+        24px
         18px
         18px;
 
@@ -255,10 +251,10 @@ main {
 .disease-card h2 {
     margin: 0;
 
-    font-size: 46px;
+    font-size: 52px;
     line-height: 1.08;
 
-    font-weight: 700;
+    font-weight: 800;
 
     letter-spacing: 0.01em;
 
@@ -283,17 +279,17 @@ main {
     width: 78%;
     min-width: 78%;
 
-    min-height: 66px;
+    min-height: 72px;
 
     padding:
-        9px
+        10px
         32px;
 
     border-radius: 999px;
 
     background: #dbe6ed;
 
-    font-size: 36px;
+    font-size: 40px;
     line-height: 1;
 
     font-weight: 800;
@@ -319,7 +315,7 @@ main {
     align-items: baseline;
 
     margin:
-        38px
+        42px
         0
         0;
 
@@ -335,7 +331,7 @@ main {
         Helvetica,
         sans-serif;
 
-    font-size: 162px;
+    font-size: 174px;
     line-height: .88;
 
     font-weight: 700;
@@ -348,9 +344,9 @@ main {
 }
 
 .value span {
-    font-size: 42px;
+    font-size: 46px;
 
-    font-weight: 700;
+    font-weight: 800;
 
     margin-left: 12px;
 
@@ -363,13 +359,13 @@ main {
 ========================================================= */
 
 .caption {
-    font-size: 32px;
+    font-size: 36px;
 
-    font-weight: 600;
+    font-weight: 700;
 
     line-height: 1.25;
 
-    margin-top: 18px;
+    margin-top: 22px;
 
     flex-shrink: 0;
 
@@ -382,13 +378,13 @@ main {
 ========================================================= */
 
 .trend {
-    font-size: 35px;
+    font-size: 40px;
 
     font-weight: 700;
 
     line-height: 1.2;
 
-    margin-top: 42px;
+    margin-top: 46px;
 
     font-variant-numeric: tabular-nums;
 
@@ -403,9 +399,9 @@ main {
 ========================================================= */
 
 .week {
-    font-size: 25px;
+    font-size: 29px;
 
-    font-weight: 700;
+    font-weight: 800;
 
     line-height: 1.2;
 
@@ -420,24 +416,23 @@ main {
 /* =========================================================
    東京都
 
-   autoでカード下部に固定。
-   画面縮小時も配置関係は変えない。
+   「第○週」と東京都の間の空きすぎを抑制
 ========================================================= */
 
 .tokyo-row {
-    margin-top: auto;
+    margin-top: 54px;
 
-    padding-top: 22px;
-    padding-bottom: 8px;
+    padding-top: 26px;
+    padding-bottom: 10px;
 
     border-top:
         2px
         solid
         rgba(18, 59, 87, .18);
 
-    font-size: 33px;
+    font-size: 36px;
 
-    font-weight: 600;
+    font-weight: 700;
 
     line-height: 1.25;
 
@@ -453,7 +448,7 @@ main {
         Helvetica,
         sans-serif;
 
-    font-size: 44px;
+    font-size: 50px;
 
     font-weight: 700;
 
@@ -547,13 +542,13 @@ main {
 .data-state {
     text-align: center;
 
-    font-size: 18px;
+    font-size: 19px;
 
-    font-weight: 600;
+    font-weight: 700;
 
-    line-height: 1.3;
+    line-height: 1.25;
 
-    margin-top: 4px;
+    margin-top: auto;
 
     flex-shrink: 0;
 
@@ -568,13 +563,13 @@ main {
 .source {
     text-align: center;
 
-    font-size: 13px;
+    font-size: 14px;
 
-    font-weight: 400;
+    font-weight: 500;
 
-    line-height: 1.35;
+    line-height: 1.3;
 
-    margin-top: 1px;
+    margin-top: 2px;
 
     flex-shrink: 0;
 
@@ -599,9 +594,9 @@ footer {
         solid
         #c7d7e2;
 
-    font-size: 26px;
+    font-size: 30px;
 
-    font-weight: 600;
+    font-weight: 800;
 
     letter-spacing: 0.01em;
 
