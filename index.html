@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>西多摩地域 感染症流行状況</title>
+<link rel="stylesheet" href="css/style.css?v=1">
+<script src="js/app.js?v=1" defer></script>
+</head>
+<body>
+<div class="screen">
+<header><div class="area">西多摩地域</div><h1>感染症流行状況</h1></header>
+<main>
+<section class="measures left"><img src="assets/handwash.png" alt="手洗い"><img src="assets/ventilation.png" alt="換気"></section>
+<section class="status" aria-live="polite">
+<div class="disease-grid">
+<article id="influenzaCard" class="disease-card"><h2>インフルエンザ</h2><div id="influenzaLevel" class="level-badge">確認中</div><div class="value"><strong id="influenzaValue">--</strong><span>人</span></div><div class="caption">定点当たり報告数</div><div id="influenzaTrend" class="trend">前週 --</div><div id="influenzaWeek" class="week">--</div></article>
+<article id="covid19Card" class="disease-card"><h2>新型コロナ</h2><div id="covid19Level" class="level-badge">確認中</div><div class="value"><strong id="covid19Value">--</strong><span>人</span></div><div class="caption">定点当たり報告数</div><div id="covid19Trend" class="trend">前週 --</div><div id="covid19Week" class="week">--</div></article>
+</div>
+<div class="data-state">定点当たり報告数 ｜ <span id="dataStatus">確認中</span></div>
+<div class="source">出典：東京都西多摩保健所 感染症週報</div>
+</section>
+<section class="measures right"><img src="assets/healthcheck.png" alt="体調報告"><img src="assets/mask.png" alt="正しいマスク着用"></section>
+</main>
+<footer>体調に変化がある場合は、無理をせず報告してください</footer>
+</div>
+</body></html>
