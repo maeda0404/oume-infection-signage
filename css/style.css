@@ -204,7 +204,7 @@ main {
 
 /* =========================================================
    疾患名
-   位置は変更しない
+   現在の位置を維持
 ========================================================= */
 
 .disease-card h2 {
@@ -223,7 +223,6 @@ main {
 
 /* =========================================================
    流行中 / 非流行
-   以前より明確に下へ
 ========================================================= */
 
 .level-badge {
@@ -237,17 +236,17 @@ main {
   width: 78%;
   min-width: 78%;
 
-  min-height: 60px;
+  min-height: 66px;
 
   padding:
-    8px
+    9px
     32px;
 
   border-radius: 999px;
 
   background: #dbe6ed;
 
-  font-size: 32px;
+  font-size: 36px;
   line-height: 1;
 
   font-weight: 800;
@@ -262,7 +261,6 @@ main {
 
 /* =========================================================
    メイン数値
-   状態帯からさらに下へ
 ========================================================= */
 
 .value {
@@ -272,7 +270,7 @@ main {
   align-items: baseline;
 
   margin:
-    42px
+    38px
     0
     0;
 
@@ -286,7 +284,7 @@ main {
     Helvetica,
     sans-serif;
 
-  font-size: 148px;
+  font-size: 162px;
 
   line-height: .88;
 
@@ -298,7 +296,7 @@ main {
 }
 
 .value span {
-  font-size: 40px;
+  font-size: 42px;
 
   font-weight: 700;
 
@@ -311,7 +309,7 @@ main {
 ========================================================= */
 
 .caption {
-  font-size: 31px;
+  font-size: 32px;
 
   font-weight: 600;
 
@@ -325,6 +323,7 @@ main {
 
 /* =========================================================
    前週比較
+   メイン数値を大きくした分、下へ移動
 ========================================================= */
 
 .trend {
@@ -334,7 +333,7 @@ main {
 
   line-height: 1.2;
 
-  margin-top: 34px;
+  margin-top: 42px;
 
   font-variant-numeric: tabular-nums;
 
@@ -353,7 +352,7 @@ main {
 
   line-height: 1.2;
 
-  margin-top: 18px;
+  margin-top: 20px;
 
   flex-shrink: 0;
 }
@@ -361,7 +360,7 @@ main {
 
 /* =========================================================
    東京都
-   ここは現在の位置を維持
+   現在の位置・大きさを維持
 ========================================================= */
 
 .tokyo-row {
@@ -581,31 +580,31 @@ footer {
     width: 78%;
     min-width: 78%;
 
-    min-height: 48px;
+    min-height: 54px;
 
     padding:
-      6px
+      7px
       20px;
 
-    font-size: 25px;
+    font-size: 29px;
 
     margin-top: 24px;
   }
 
   .value {
-    margin-top: 30px;
+    margin-top: 28px;
   }
 
   .value strong {
-    font-size: 98px;
+    font-size: 108px;
   }
 
   .value span {
-    font-size: 30px;
+    font-size: 32px;
   }
 
   .caption {
-    font-size: 23px;
+    font-size: 24px;
 
     margin-top: 14px;
   }
@@ -613,13 +612,13 @@ footer {
   .trend {
     font-size: 27px;
 
-    margin-top: 24px;
+    margin-top: 30px;
   }
 
   .week {
     font-size: 20px;
 
-    margin-top: 12px;
+    margin-top: 14px;
   }
 
   .tokyo-row {
@@ -700,27 +699,27 @@ footer {
   }
 
   .level-badge {
-    min-height: 52px;
+    min-height: 56px;
 
-    font-size: 27px;
+    font-size: 30px;
 
     margin-top: 24px;
   }
 
   .value {
-    margin-top: 30px;
+    margin-top: 28px;
   }
 
   .value strong {
-    font-size: 96px;
+    font-size: 104px;
   }
 
   .value span {
-    font-size: 30px;
+    font-size: 32px;
   }
 
   .caption {
-    font-size: 24px;
+    font-size: 25px;
 
     margin-top: 14px;
   }
@@ -728,13 +727,13 @@ footer {
   .trend {
     font-size: 28px;
 
-    margin-top: 24px;
+    margin-top: 30px;
   }
 
   .week {
     font-size: 21px;
 
-    margin-top: 12px;
+    margin-top: 14px;
   }
 
   .tokyo-row {
