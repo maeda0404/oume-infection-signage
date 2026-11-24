@@ -59,9 +59,14 @@ TOKYO_WEEKLY_PAGE_URL = (
     "weekly/"
 )
 
+TOKYO_WEEKLY_PDF_BASE_URL = (
+    "https://idsc.tmiph.metro.tokyo.lg.jp/"
+    "assets/weekly"
+)
+
 USER_AGENT = (
     "Mozilla/5.0 "
-    "Nishitama-Infection-Signage/2.0"
+    "Nishitama-Infection-Signage/3.0"
 )
 
 
@@ -74,6 +79,7 @@ class LinkParser(HTMLParser):
 
     def __init__(self):
         super().__init__()
+
         self.links = []
         self.current_href = None
         self.current_text = []
@@ -83,6 +89,7 @@ class LinkParser(HTMLParser):
             return
 
         attributes = dict(attrs)
+
         self.current_href = attributes.get("href")
         self.current_text = []
 
@@ -98,7 +105,9 @@ class LinkParser(HTMLParser):
             self.links.append(
                 {
                     "href": self.current_href,
-                    "text": " ".join(self.current_text),
+                    "text": " ".join(
+                        self.current_text
+                    ),
                 }
             )
 
@@ -120,7 +129,9 @@ def fetch_bytes(url, retries=3):
             separator = "&" if "?" in url else "?"
 
             cache_buster = int(
-                datetime.now(timezone.utc).timestamp()
+                datetime.now(
+                    timezone.utc
+                ).timestamp()
             )
 
             request = urllib.request.Request(
@@ -223,14 +234,14 @@ def normalize_text(value):
         )
 
     return re.sub(
-        r"\s+",
+        r"[ \t\r\f\v]+",
         " ",
         text,
     ).strip()
 
 
 def compact_text(value):
-    """解析用に空白をすべて除去する。"""
+    """解析用にすべての空白を除去する。"""
 
     return re.sub(
         r"\s+",
@@ -304,7 +315,7 @@ def number(value):
 
 
 def iso_week_period(year, week):
-    """ISO週番号から月曜日から日曜日までの期間を生成する。"""
+    """ISO週番号から月曜日～日曜日の期間を生成する。"""
 
     monday = date.fromisocalendar(
         year,
@@ -321,6 +332,30 @@ def iso_week_period(year, week):
     return (
         f"{monday.month}月{monday.day}日～"
         f"{sunday.month}月{sunday.day}日"
+    )
+
+
+def previous_iso_week(year, week):
+    """指定したISO週の前週を返す。"""
+
+    current_monday = date.fromisocalendar(
+        year,
+        week,
+        1,
+    )
+
+    previous_monday = (
+        current_monday
+        - timedelta(days=7)
+    )
+
+    previous_iso = (
+        previous_monday.isocalendar()
+    )
+
+    return (
+        previous_iso.year,
+        previous_iso.week,
     )
 
 
@@ -476,7 +511,7 @@ def get_previous_record(
     group_name,
     infection_name,
 ):
-    """前回データから指定した感染症データを取得する。"""
+    """前回データから指定感染症のデータを取得する。"""
 
     group = previous.get(
         group_name,
@@ -813,7 +848,7 @@ def extract_value_pair(
     """
     PDFから最新値と前週値を取得する。
 
-    想定形式
+    想定形式:
     インフルエンザ 5.07（3.07）
     新型コロナウイルス感染症 0.79（0.29）
     """
@@ -1096,7 +1131,10 @@ def find_tokyo_flu_records(workbook):
                 ).lower()
                 for column in range(
                     1,
-                    min(sheet.max_column, 10) + 1,
+                    min(
+                        sheet.max_column,
+                        10,
+                    ) + 1,
                 )
             ]
 
@@ -1341,7 +1379,7 @@ def find_latest_tokyo_weekly_pdf(page_html):
     """
     東京都感染症週報ページから最新PDFを検出する。
 
-    想定URL
+    想定URL:
     https://idsc.tmiph.metro.tokyo.lg.jp/assets/weekly/2026/46.pdf
     """
 
@@ -1356,11 +1394,10 @@ def find_latest_tokyo_weekly_pdf(page_html):
         label = link["label"]
 
         parsed = urlparse(url)
-        path = parsed.path
 
         match = re.search(
             r"/assets/weekly/(20\d{2})/(\d{1,2})\.pdf$",
-            path,
+            parsed.path,
             flags=re.IGNORECASE,
         )
 
@@ -1423,129 +1460,247 @@ def find_latest_tokyo_weekly_pdf(page_html):
     return selected
 
 
-def extract_tokyo_covid_values(pdf_text):
+def make_tokyo_weekly_pdf_url(year, week):
+    """年と週番号から東京都感染症週報PDFのURLを生成する。"""
+
+    return (
+        f"{TOKYO_WEEKLY_PDF_BASE_URL}/"
+        f"{year}/{week}.pdf"
+    )
+
+
+def find_tokyo_rate_section(pdf_text):
     """
-    東京都感染症週報から新型コロナの値を取得する。
-
-    週報の定点把握対象疾患表は、次の順番で掲載される。
-
-    新型コロナウイルス感染症(COVID-19)
-    43週報告数 44週報告数 45週報告数 46週報告数
-    43週定点値 44週定点値 45週定点値 46週定点値
-
-    小数値の最後を最新週、最後から2番目を前週として採用する。
+    東京都感染症週報から、
+    保健所別の定点医療機関当たり報告数表を取得する。
     """
 
-    normalized = normalize_text(
+    compact = compact_text(
         pdf_text
     )
 
-    disease_patterns = [
-        r"新型コロナウイルス感染症\s*\(COVID-19\)",
-        r"新型コロナウイルス感染症",
-        r"新型コロナ",
+    start_marker = (
+        "定点把握対象疾患"
+        "定点医療機関当たり報告数"
+        "【保健所別】"
+    )
+
+    start = compact.find(
+        start_marker
+    )
+
+    if start < 0:
+        start_marker = (
+            "定点把握対象疾患"
+            "定点医療機関当たり報告数"
+        )
+
+        start = compact.find(
+            start_marker
+        )
+
+    if start < 0:
+        raise ValueError(
+            "東京都感染症週報から"
+            "保健所別定点当たり報告数表を"
+            "検出できません"
+        )
+
+    end_markers = [
+        "定点把握対象疾患報告数【保健所別】",
+        "定点把握対象疾患報告数",
     ]
 
-    for disease_pattern in disease_patterns:
-        match = re.search(
-            disease_pattern,
-            normalized,
-            flags=re.IGNORECASE,
+    end_candidates = []
+
+    for end_marker in end_markers:
+        position = compact.find(
+            end_marker,
+            start + len(start_marker),
         )
 
-        if not match:
-            continue
+        if position >= 0:
+            end_candidates.append(position)
 
-        start = match.start()
+    if end_candidates:
+        end = min(end_candidates)
+        return compact[start:end]
 
-        # 該当疾患名以降の表部分を限定して解析する。
-        section = normalized[
-            start:
-            start + 700
+    return compact[start:]
+
+
+def extract_tokyo_covid_rate(pdf_text):
+    """
+    東京都感染症週報から東京都全体の
+    新型コロナ定点当たり報告数を取得する。
+
+    対象行の列順:
+    東京都
+    1列目 インフルエンザ
+    2列目 新型コロナ
+    3列目 急性呼吸器感染症
+    """
+
+    section = find_tokyo_rate_section(
+        pdf_text
+    )
+
+    candidates = []
+
+    for match in re.finditer(
+        r"東京都(?!合計)",
+        section,
+    ):
+        nearby = section[
+            match.end():
+            match.end() + 250
         ]
 
-        decimal_values = [
+        values = [
             float(value)
             for value in re.findall(
-                r"(?<![\d.])(\d+\.\d+)(?![\d.])",
-                section,
+                r"(?<![\d.])"
+                r"(\d+\.\d+)"
+                r"(?![\d.])",
+                nearby,
             )
         ]
 
-        # 想定される直近4週の定点値を採用する。
-        if len(decimal_values) < 2:
+        if len(values) < 2:
             continue
 
-        valid_rates = [
-            value
-            for value in decimal_values
-            if 0 <= value <= 100
+        influenza_value = values[0]
+        covid_value = values[1]
+
+        if not (
+            0 <= influenza_value <= 500
+            and 0 <= covid_value <= 100
+        ):
+            continue
+
+        candidates.append(
+            {
+                "influenza": round(
+                    influenza_value,
+                    2,
+                ),
+                "covid19": round(
+                    covid_value,
+                    2,
+                ),
+                "values": values[:12],
+                "nearby": nearby[:250],
+            }
+        )
+
+    if not candidates:
+        raise ValueError(
+            "東京都感染症週報から"
+            "東京都行の定点当たり報告数を"
+            "取得できません"
+        )
+
+    # 小児科系の東京都行が先にあり、
+    # インフルエンザ・コロナ系の東京都行が後にあるため、
+    # 最後の有効候補を採用する。
+    selected = candidates[-1]
+
+    print(
+        "東京都定点値・採用候補:",
+        json.dumps(
+            selected,
+            ensure_ascii=False,
+        ),
+    )
+
+    return selected["covid19"]
+
+
+def extract_tokyo_covid_reported_cases(pdf_text):
+    """
+    東京都感染症週報から東京都全体の
+    新型コロナ報告数を取得する。
+
+    対象行の列順:
+    東京都合計
+    1列目 インフルエンザ
+    2列目 新型コロナ
+    3列目 急性呼吸器感染症
+    """
+
+    compact = compact_text(
+        pdf_text
+    )
+
+    candidates = []
+
+    for match in re.finditer(
+        r"東京都合計",
+        compact,
+    ):
+        nearby = compact[
+            match.end():
+            match.end() + 220
         ]
 
-        if len(valid_rates) < 2:
-            continue
-
-        # PDF抽出順では該当疾患の4週分が最初に並ぶ。
-        rates = valid_rates[:4]
-
-        if len(rates) < 2:
-            continue
-
-        current_value = round(
-            rates[-1],
-            2,
-        )
-
-        previous_value = round(
-            rates[-2],
-            2,
-        )
-
-        # 疾患名直後に並ぶ整数4件を週別報告数として取得する。
-        integer_values = [
+        values = [
             int(value.replace(",", ""))
             for value in re.findall(
-                r"(?<![\d.])(\d{1,3}(?:,\d{3})*|\d+)(?![\d.])",
-                section,
+                r"(?<![\d.])"
+                r"(\d{1,3}(?:,\d{3})+|\d+)"
+                r"(?![\d.])",
+                nearby,
             )
         ]
 
-        valid_counts = [
-            value
-            for value in integer_values
-            if 0 <= value <= 100000
-        ]
+        if len(values) < 2:
+            continue
 
-        reported_cases = None
+        influenza_count = values[0]
+        covid_count = values[1]
 
-        if len(valid_counts) >= 4:
-            reported_cases = valid_counts[3]
+        if not (
+            0 <= influenza_count <= 1000000
+            and 0 <= covid_count <= 1000000
+        ):
+            continue
 
-        print(
-            "東京都新型コロナ抽出結果:",
+        candidates.append(
             {
-                "rates": rates,
-                "current": current_value,
-                "previous": previous_value,
-                "reportedCases": reported_cases,
-            },
+                "influenza": influenza_count,
+                "covid19": covid_count,
+                "values": values[:12],
+            }
         )
 
-        return {
-            "value": current_value,
-            "previousValue": previous_value,
-            "reportedCases": reported_cases,
-        }
+    if not candidates:
+        print(
+            "東京都新型コロナ報告数を"
+            "取得できませんでした"
+        )
 
-    raise ValueError(
-        "東京都感染症週報から"
-        "新型コロナの定点当たり報告数を"
-        "取得できません"
+        return None
+
+    # インフルエンザ・コロナ系の東京都合計行は
+    # PDF後半に掲載されるため最後の候補を採用する。
+    selected = candidates[-1]
+
+    print(
+        "東京都報告数・採用候補:",
+        json.dumps(
+            selected,
+            ensure_ascii=False,
+        ),
     )
+
+    return selected["covid19"]
 
 
 def get_tokyo_covid19_data():
-    """東京都感染症週報PDFから新型コロナ情報を取得する。"""
+    """
+    最新週と前週の東京都感染症週報PDFから
+    東京都全体の新型コロナ情報を取得する。
+    """
 
     page_html = fetch_text(
         TOKYO_WEEKLY_PAGE_URL
@@ -1555,21 +1710,56 @@ def get_tokyo_covid19_data():
         page_html
     )
 
-    pdf_bytes = fetch_bytes(
+    latest_pdf_bytes = fetch_bytes(
         latest_report["url"]
     )
 
-    pdf_text = extract_pdf_text(
-        pdf_bytes
+    latest_pdf_text = extract_pdf_text(
+        latest_pdf_bytes
     )
 
-    covid_values = extract_tokyo_covid_values(
-        pdf_text
+    current_value = extract_tokyo_covid_rate(
+        latest_pdf_text
+    )
+
+    reported_cases = (
+        extract_tokyo_covid_reported_cases(
+            latest_pdf_text
+        )
+    )
+
+    previous_year, previous_week = (
+        previous_iso_week(
+            latest_report["year"],
+            latest_report["week"],
+        )
+    )
+
+    previous_url = make_tokyo_weekly_pdf_url(
+        previous_year,
+        previous_week,
+    )
+
+    print(
+        "東京都新型コロナ前週PDF:",
+        previous_url,
+    )
+
+    previous_pdf_bytes = fetch_bytes(
+        previous_url
+    )
+
+    previous_pdf_text = extract_pdf_text(
+        previous_pdf_bytes
+    )
+
+    previous_value = extract_tokyo_covid_rate(
+        previous_pdf_text
     )
 
     record = make_record(
-        value=covid_values["value"],
-        previous_value=covid_values["previousValue"],
+        value=current_value,
+        previous_value=previous_value,
         year=latest_report["year"],
         week=latest_report["week"],
         period=iso_week_period(
@@ -1581,7 +1771,11 @@ def get_tokyo_covid19_data():
     )
 
     record["reportedCases"] = (
-        covid_values["reportedCases"]
+        reported_cases
+    )
+
+    record["previousSourceUrl"] = (
+        previous_url
     )
 
     return record
@@ -1636,22 +1830,18 @@ def main():
             "西多摩感染症情報"
         )
 
-        nishitama_influenza = (
-            fallback_record(
-                previous=previous,
-                group_name="nishitama",
-                infection_name="influenza",
-                source_url=NISHITAMA_WEEKLY_PAGE_URL,
-            )
+        nishitama_influenza = fallback_record(
+            previous=previous,
+            group_name="nishitama",
+            infection_name="influenza",
+            source_url=NISHITAMA_WEEKLY_PAGE_URL,
         )
 
-        nishitama_covid19 = (
-            fallback_record(
-                previous=previous,
-                group_name="nishitama",
-                infection_name="covid19",
-                source_url=NISHITAMA_WEEKLY_PAGE_URL,
-            )
+        nishitama_covid19 = fallback_record(
+            previous=previous,
+            group_name="nishitama",
+            infection_name="covid19",
+            source_url=NISHITAMA_WEEKLY_PAGE_URL,
         )
 
         debug["nishitama"] = {
@@ -1679,13 +1869,11 @@ def main():
             "東京都インフルエンザ"
         )
 
-        tokyo_influenza = (
-            fallback_record(
-                previous=previous,
-                group_name="tokyo",
-                infection_name="influenza",
-                source_url=TOKYO_FLU_TOP_URL,
-            )
+        tokyo_influenza = fallback_record(
+            previous=previous,
+            group_name="tokyo",
+            infection_name="influenza",
+            source_url=TOKYO_FLU_TOP_URL,
         )
 
         debug["tokyoInfluenza"] = {
@@ -1707,6 +1895,11 @@ def main():
             "sourceUrl": tokyo_covid19.get(
                 "sourceUrl"
             ),
+            "previousSourceUrl": (
+                tokyo_covid19.get(
+                    "previousSourceUrl"
+                )
+            ),
             "year": tokyo_covid19.get(
                 "year"
             ),
@@ -1716,11 +1909,15 @@ def main():
             "value": tokyo_covid19.get(
                 "perSentinel"
             ),
-            "previousValue": tokyo_covid19.get(
-                "previousPerSentinel"
+            "previousValue": (
+                tokyo_covid19.get(
+                    "previousPerSentinel"
+                )
             ),
-            "reportedCases": tokyo_covid19.get(
-                "reportedCases"
+            "reportedCases": (
+                tokyo_covid19.get(
+                    "reportedCases"
+                )
             ),
         }
 
@@ -1734,13 +1931,11 @@ def main():
             "東京都新型コロナ"
         )
 
-        tokyo_covid19 = (
-            fallback_record(
-                previous=previous,
-                group_name="tokyo",
-                infection_name="covid19",
-                source_url=TOKYO_WEEKLY_PAGE_URL,
-            )
+        tokyo_covid19 = fallback_record(
+            previous=previous,
+            group_name="tokyo",
+            infection_name="covid19",
+            source_url=TOKYO_WEEKLY_PAGE_URL,
         )
 
         debug["tokyoCovid19"] = {
