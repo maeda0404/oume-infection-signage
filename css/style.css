@@ -30,8 +30,14 @@ body {
 
 .screen {
   height: 100vh;
+
   display: grid;
-  grid-template-rows: 68px 1fr 62px;
+
+  grid-template-rows:
+    68px
+    1fr
+    62px;
+
   overflow: hidden;
 }
 
@@ -42,11 +48,16 @@ body {
 
 header {
   display: flex;
+
   align-items: center;
   justify-content: center;
 
   background: #e8f4fb;
-  border-bottom: 1px solid #c7d7e2;
+
+  border-bottom:
+    1px
+    solid
+    #c7d7e2;
 
   padding: 4px;
 }
@@ -57,10 +68,10 @@ header h1 {
   font-size: 42px;
   line-height: 1;
 
-  /* 900 → 700 */
   font-weight: 700;
 
   letter-spacing: 0.01em;
+
   white-space: nowrap;
 }
 
@@ -71,6 +82,7 @@ header h1 {
 
 main {
   display: grid;
+
   grid-template-columns:
     320px
     minmax(760px, 1fr)
@@ -93,7 +105,10 @@ main {
 
 .measures {
   display: grid;
-  grid-template-rows: 1fr 1fr;
+
+  grid-template-rows:
+    1fr
+    1fr;
 
   gap: 12px;
 
@@ -109,15 +124,23 @@ main {
 
 
 /* =========================================================
-   中央ステータス
+   中央ステータス外枠
 ========================================================= */
 
 .status {
-  border: 4px solid #7894a8;
+  border:
+    4px
+    solid
+    #7894a8;
+
   border-radius: 28px;
 
+  /*
+    上下余白を従来より縮小して
+    疾患カードそのものを大きくする
+  */
   padding:
-    20px
+    12px
     22px
     4px;
 
@@ -125,44 +148,78 @@ main {
 
   display: flex;
   flex-direction: column;
-  justify-content: center;
+
+  /*
+    中央寄せをやめる
+  */
+  justify-content: stretch;
 
   min-width: 0;
+  min-height: 0;
 }
 
 
 /* =========================================================
-   疾患カード
+   2つの疾患カード
 ========================================================= */
 
 .disease-grid {
   display: grid;
 
   grid-template-columns:
-    1fr 1fr;
+    1fr
+    1fr;
 
   gap: 24px;
 
   flex: 1;
+
+  /*
+    カードを中央枠の縦いっぱいまで伸ばす
+  */
+  align-items: stretch;
+
   min-height: 0;
 }
 
+
+/* =========================================================
+   疾患カード本体
+
+   上端から下端までカード全体を使用する
+========================================================= */
+
 .disease-card {
-  border: 5px solid #7894a8;
+  border:
+    5px
+    solid
+    #7894a8;
+
   border-radius: 25px;
 
   background: #fff;
 
   text-align: center;
 
+  /*
+    枠との最低限の余白だけ残す
+  */
   padding:
     22px
-    16px
-    4px;
+    18px
+    18px;
 
   display: flex;
   flex-direction: column;
-  justify-content: center;
+
+  /*
+    以前の center を廃止。
+    疾患名から東京都までを
+    カード全高に広げる。
+  */
+  justify-content: space-between;
+
+  min-height: 0;
 
   transition:
     background-color .35s,
@@ -178,12 +235,11 @@ main {
   margin:
     0
     0
-    10px;
+    12px;
 
-  font-size: 40px;
-  line-height: 1.15;
+  font-size: 46px;
+  line-height: 1.08;
 
-  /* 極太をやめる */
   font-weight: 700;
 
   letter-spacing: 0.01em;
@@ -191,29 +247,43 @@ main {
 
 
 /* =========================================================
-   流行レベル
+   流行中 / 非流行の帯
+
+   太く、大きく、遠距離から見やすくする
 ========================================================= */
 
 .level-badge {
-  display: inline-block;
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
   align-self: center;
 
-  min-width: 70%;
+  width: 78%;
+  min-width: 78%;
+
+  min-height: 60px;
 
   padding:
-    5px
-    28px;
+    8px
+    32px;
 
   border-radius: 999px;
 
   background: #dbe6ed;
 
-  font-size: 27px;
+  font-size: 32px;
+  line-height: 1;
 
-  /* 900 → 700 */
-  font-weight: 700;
+  /*
+    状態表示は強調する
+  */
+  font-weight: 800;
 
-  line-height: 1.25;
+  letter-spacing: 0.02em;
+
+  margin-bottom: 12px;
 }
 
 
@@ -223,47 +293,49 @@ main {
 
 .value {
   display: flex;
+
   justify-content: center;
   align-items: baseline;
 
+  /*
+    状態帯との間隔を確保
+  */
   margin:
-    8px
+    14px
     0
-    4px;
+    8px;
 }
 
 .value strong {
-  /*
-    数字は日本語フォントではなく、
-    Arial系を優先して潰れを防ぐ。
-  */
   font-family:
     Arial,
     "Helvetica Neue",
     Helvetica,
     sans-serif;
 
-  font-size: 132px;
-  line-height: .92;
-
   /*
-    900だと遠距離で数字の内部が潰れやすい。
-    700でも十分に強く見える。
+    従来132pxから148pxへ拡大
   */
+  font-size: 148px;
+
+  line-height: .88;
+
   font-weight: 700;
 
-  letter-spacing: -0.035em;
+  /*
+    大数字が間延びしない程度に詰める
+  */
+  letter-spacing: -0.04em;
 
   font-variant-numeric: tabular-nums;
 }
 
 .value span {
-  font-size: 34px;
+  font-size: 40px;
 
-  /* 900 → 700 */
   font-weight: 700;
 
-  margin-left: 10px;
+  margin-left: 12px;
 }
 
 
@@ -272,15 +344,13 @@ main {
 ========================================================= */
 
 .caption {
-  font-size: 27px;
+  font-size: 31px;
 
-  /*
-    横浜版に近い太さ。
-    小さい文字は900よりこちらの方が読みやすい。
-  */
   font-weight: 600;
 
-  line-height: 1.35;
+  line-height: 1.25;
+
+  margin-top: 4px;
 }
 
 
@@ -289,56 +359,62 @@ main {
 ========================================================= */
 
 .trend {
-  font-size: 32px;
+  font-size: 35px;
 
-  /* 900 → 700 */
   font-weight: 700;
 
-  line-height: 1.25;
+  line-height: 1.2;
 
-  margin-top: 11px;
+  /*
+    定点当たり報告数との間隔を広げる
+  */
+  margin-top: 20px;
 
   font-variant-numeric: tabular-nums;
 }
 
 
 /* =========================================================
-   週番号
+   第○週
 ========================================================= */
 
 .week {
-  font-size: 21px;
+  font-size: 25px;
 
-  /* 900 → 600 */
-  font-weight: 600;
+  font-weight: 700;
 
-  line-height: 1.3;
+  line-height: 1.2;
 
-  margin-top: 4px;
+  margin-top: 8px;
 }
 
 
 /* =========================================================
    東京都
+
+   カード下部をしっかり使用する
 ========================================================= */
 
 .tokyo-row {
-  margin-top: 12px;
+  /*
+    残った縦方向の空間を使い、
+    東京都表示を下側へ配置
+  */
+  margin-top: auto;
 
-  padding-top: 10px;
-  padding-bottom: 0;
+  padding-top: 22px;
+  padding-bottom: 8px;
 
   border-top:
     2px
     solid
-    rgba(18, 59, 87, .16);
+    rgba(18, 59, 87, .18);
 
-  font-size: 30px;
+  font-size: 33px;
 
-  /* 900 → 600 */
   font-weight: 600;
 
-  line-height: 1.3;
+  line-height: 1.25;
 }
 
 .tokyo-row strong {
@@ -348,13 +424,13 @@ main {
     Helvetica,
     sans-serif;
 
-  font-size: 38px;
+  font-size: 44px;
 
   font-weight: 700;
 
   font-variant-numeric: tabular-nums;
 
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
 }
 
 
@@ -444,12 +520,15 @@ main {
 
   font-size: 18px;
 
-  /* 900 → 600 */
   font-weight: 600;
 
   line-height: 1.3;
 
-  margin-top: 4px;
+  /*
+    中央カードの高さを最大限確保するため
+    余白を小さくする
+  */
+  margin-top: 3px;
 }
 
 
@@ -462,14 +541,11 @@ main {
 
   font-size: 13px;
 
-  /*
-    出典は強調しすぎない。
-  */
   font-weight: 400;
 
-  line-height: 1.35;
+  line-height: 1.3;
 
-  margin-top: 1px;
+  margin-top: 0;
 }
 
 
@@ -479,6 +555,7 @@ main {
 
 footer {
   display: flex;
+
   align-items: center;
   justify-content: center;
 
@@ -491,7 +568,6 @@ footer {
 
   font-size: 26px;
 
-  /* 900 → 600 */
   font-weight: 600;
 
   letter-spacing: 0.01em;
@@ -516,12 +592,71 @@ footer {
     gap: 14px;
   }
 
-  .value strong {
-    font-size: 88px;
+  .status {
+    padding:
+      10px
+      14px
+      4px;
+  }
+
+  .disease-grid {
+    gap: 14px;
+  }
+
+  .disease-card {
+    padding:
+      18px
+      12px
+      14px;
   }
 
   .disease-card h2 {
-    font-size: 31px;
+    font-size: 34px;
+  }
+
+  .level-badge {
+    width: 78%;
+    min-width: 78%;
+
+    min-height: 48px;
+
+    padding:
+      6px
+      20px;
+
+    font-size: 25px;
+  }
+
+  .value strong {
+    font-size: 98px;
+  }
+
+  .value span {
+    font-size: 30px;
+  }
+
+  .caption {
+    font-size: 23px;
+  }
+
+  .trend {
+    font-size: 27px;
+
+    margin-top: 14px;
+  }
+
+  .week {
+    font-size: 20px;
+  }
+
+  .tokyo-row {
+    font-size: 25px;
+
+    padding-top: 16px;
+  }
+
+  .tokyo-row strong {
+    font-size: 32px;
   }
 }
 
@@ -563,16 +698,66 @@ footer {
     display: none;
   }
 
-  .disease-grid {
-    grid-template-columns: 1fr;
-  }
-
   .status {
     margin: 10px;
+
+    padding:
+      12px
+      12px
+      6px;
+  }
+
+  .disease-grid {
+    grid-template-columns: 1fr;
+
+    gap: 14px;
+  }
+
+  .disease-card {
+    min-height: 620px;
+
+    padding:
+      22px
+      16px
+      18px;
+  }
+
+  .disease-card h2 {
+    font-size: 36px;
+  }
+
+  .level-badge {
+    min-height: 52px;
+
+    font-size: 27px;
   }
 
   .value strong {
-    font-size: 84px;
+    font-size: 96px;
+  }
+
+  .value span {
+    font-size: 30px;
+  }
+
+  .caption {
+    font-size: 24px;
+  }
+
+  .trend {
+    font-size: 28px;
+  }
+
+  .week {
+    font-size: 21px;
+  }
+
+  .tokyo-row {
+    font-size: 26px;
+  }
+
+  .tokyo-row strong {
+    font-size: 34px;
   }
 
   footer {
