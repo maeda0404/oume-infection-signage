@@ -1,616 +1,262 @@
-/* =========================================================
-   共通
-========================================================= */
+<!doctype html>
 
-* {
-    box-sizing: border-box;
-}
+<html lang="ja">
 
-html,
-body {
-    margin: 0;
-    width: 100%;
-    height: 100%;
+<head>
+    <meta charset="utf-8">
 
-    font-family:
-        "BIZ UDPGothic",
-        "Yu Gothic",
-        "YuGothic",
-        "Meiryo",
-        "Noto Sans JP",
-        sans-serif;
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
 
-    color: #123b57;
-    background: #f4f9fc;
+    <title>西多摩地域 感染症流行状況</title>
 
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
+    <link
+        rel="stylesheet"
+        href="css/style.css?v=10"
+    >
 
-    overflow: hidden;
-}
+    <script
+        src="js/app.js?v=3"
+        defer
+    ></script>
+</head>
 
 
-/* =========================================================
-   表示領域
-========================================================= */
+<body>
 
-.viewport {
-    width: 100vw;
-    height: 100vh;
+    <div class="viewport">
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+        <div class="screen">
 
-    overflow: hidden;
+            <header>
+                <h1>西多摩地域　感染症流行状況</h1>
+            </header>
 
-    background: #f4f9fc;
-}
 
+            <main>
 
-/* =========================================================
-   1920 × 1080 基準キャンバス
-========================================================= */
+                <!-- 左側 -->
+                <section class="measures">
 
-.screen {
-    width: 1920px;
-    height: 1080px;
+                    <img
+                        src="assets/handwash.png"
+                        alt="手洗い"
+                    >
 
-    flex: 0 0 auto;
+                    <img
+                        src="assets/ventilation.png"
+                        alt="換気"
+                    >
 
-    display: grid;
+                </section>
 
-    grid-template-rows:
-        78px
-        1fr
-        68px;
 
-    overflow: hidden;
+                <!-- 中央 -->
+                <section
+                    class="status"
+                    aria-live="polite"
+                >
 
-    transform-origin: center center;
-}
+                    <div class="disease-grid">
 
 
-/* =========================================================
-   ヘッダー
-========================================================= */
+                        <!-- インフルエンザ -->
+                        <article
+                            id="influenzaCard"
+                            class="disease-card"
+                        >
 
-header {
-    display: flex;
+                            <h2>インフルエンザ</h2>
 
-    align-items: center;
-    justify-content: center;
+                            <div
+                                id="influenzaLevel"
+                                class="level-badge"
+                            >
+                                確認中
+                            </div>
 
-    background: #e8f4fb;
+                            <div class="value">
 
-    border-bottom:
-        1px
-        solid
-        #c7d7e2;
+                                <strong id="influenzaValue">
+                                    --
+                                </strong>
 
-    padding: 4px;
-}
+                                <span>人</span>
 
-header h1 {
-    margin: 0;
+                            </div>
 
-    font-size: 56px;
-    line-height: 1;
+                            <div class="caption">
+                                定点当たり報告数
+                            </div>
 
-    font-weight: 900;
+                            <div
+                                id="influenzaTrend"
+                                class="trend"
+                            >
+                                前週 --
+                            </div>
 
-    letter-spacing: 0.01em;
+                            <div
+                                id="influenzaWeek"
+                                class="week"
+                            >
+                                --
+                            </div>
 
-    white-space: nowrap;
-}
+                            <div class="tokyo-row">
 
+                                東京都　
 
-/* =========================================================
-   メイン
+                                <strong id="influenzaTokyo">
+                                    --
+                                </strong>
 
-   四隅画像を大きくするため
-   左右列 370px
-   中央とのgap 18px
-   外側余白 18px
-========================================================= */
+                                人／定点
 
-main {
-    display: grid;
+                            </div>
 
-    grid-template-columns:
-        370px
-        minmax(760px, 1fr)
-        370px;
+                        </article>
 
-    gap: 18px;
 
-    padding:
-        14px
-        18px
-        10px;
+                        <!-- 新型コロナ -->
+                        <article
+                            id="covid19Card"
+                            class="disease-card"
+                        >
 
-    min-width: 0;
-    min-height: 0;
-}
+                            <h2>新型コロナ</h2>
 
+                            <div
+                                id="covid19Level"
+                                class="level-badge"
+                            >
+                                確認中
+                            </div>
 
-/* =========================================================
-   左右の啓発画像
+                            <div class="value">
 
-   以前の 1fr / 1fr を廃止。
-   画像そのものを中央側へ寄せ、
-   上下画像間の見かけ上の空白を縮小。
-========================================================= */
+                                <strong id="covid19Value">
+                                    --
+                                </strong>
 
-.measures {
-    display: flex;
+                                <span>人</span>
 
-    flex-direction: column;
+                            </div>
 
-    justify-content: center;
-    align-items: center;
+                            <div class="caption">
+                                定点当たり報告数
+                            </div>
 
-    gap: 70px;
+                            <div
+                                id="covid19Trend"
+                                class="trend"
+                            >
+                                前週 --
+                            </div>
 
-    min-width: 0;
-    min-height: 0;
-}
+                            <div
+                                id="covid19Week"
+                                class="week"
+                            >
+                                --
+                            </div>
 
-.measures img {
-    display: block;
+                            <div class="tokyo-row">
 
-    width: 100%;
-    height: auto;
+                                東京都　
 
-    max-height: 390px;
+                                <strong id="covid19Tokyo">
+                                    --
+                                </strong>
 
-    object-fit: contain;
+                                人／定点
 
-    flex-shrink: 0;
-}
+                            </div>
 
+                        </article>
 
-/* =========================================================
-   中央ステータス外枠
-========================================================= */
+                    </div>
 
-.status {
-    border:
-        4px
-        solid
-        #7894a8;
 
-    border-radius: 28px;
+                    <div class="data-state">
 
-    padding:
-        20px
-        22px
-        4px;
+                        定点当たり報告数 ｜
 
-    background: #fff;
+                        <span id="dataStatus">
+                            確認中
+                        </span>
 
-    display: flex;
-    flex-direction: column;
+                    </div>
 
-    min-width: 0;
-    min-height: 0;
 
-    overflow: hidden;
-}
+                    <div class="source">
+                        出典：東京都西多摩保健所・東京都感染症情報センター
+                    </div>
 
+                </section>
 
-/* =========================================================
-   2つの疾患カード
-========================================================= */
 
-.disease-grid {
-    display: grid;
+                <!-- 右側 -->
+                <section class="measures">
 
-    grid-template-columns:
-        1fr
-        1fr;
+                    <img
+                        src="assets/healthcheck.png"
+                        alt="体調報告"
+                    >
 
-    gap: 24px;
+                    <img
+                        src="assets/mask.png"
+                        alt="正しいマスク着用"
+                    >
 
-    flex: 1;
+                </section>
 
-    align-items: stretch;
+            </main>
 
-    min-width: 0;
-    min-height: 0;
-}
 
+            <footer>
+                体調に変化がある場合は、無理をせず報告してください
+            </footer>
 
-/* =========================================================
-   疾患カード
-========================================================= */
+        </div>
 
-.disease-card {
-    border:
-        5px
-        solid
-        #7894a8;
+    </div>
 
-    border-radius: 25px;
 
-    background: #fff;
+    <!-- 1920 × 1080を基準に画面全体を等倍縮小 -->
+    <script>
 
-    text-align: center;
+        function fitScreen() {
 
-    padding:
-        24px
-        18px
-        18px;
+            const screen = document.querySelector('.screen');
 
-    display: flex;
-    flex-direction: column;
+            const baseWidth = 1920;
+            const baseHeight = 1080;
 
-    min-width: 0;
-    min-height: 0;
+            const scaleX = window.innerWidth / baseWidth;
+            const scaleY = window.innerHeight / baseHeight;
 
-    overflow: hidden;
+            const scale = Math.min(scaleX, scaleY);
 
-    transition:
-        background-color .35s,
-        border-color .35s;
-}
+            screen.style.transform = `scale(${scale})`;
+        }
 
 
-/* =========================================================
-   疾患名
-========================================================= */
+        window.addEventListener(
+            'DOMContentLoaded',
+            fitScreen
+        );
 
-.disease-card h2 {
-    margin: 0;
 
-    font-size: 52px;
-    line-height: 1.08;
+        window.addEventListener(
+            'resize',
+            fitScreen
+        );
 
-    font-weight: 800;
+    </script>
 
-    letter-spacing: 0.01em;
+</body>
 
-    flex-shrink: 0;
-
-    white-space: nowrap;
-}
-
-
-/* =========================================================
-   流行中 / 非流行
-========================================================= */
-
-.level-badge {
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    align-self: center;
-
-    width: 78%;
-    min-width: 78%;
-
-    min-height: 72px;
-
-    padding:
-        10px
-        32px;
-
-    border-radius: 999px;
-
-    background: #dbe6ed;
-
-    font-size: 40px;
-    line-height: 1;
-
-    font-weight: 800;
-
-    letter-spacing: 0.02em;
-
-    margin-top: 34px;
-
-    flex-shrink: 0;
-
-    white-space: nowrap;
-}
-
-
-/* =========================================================
-   メイン数値
-========================================================= */
-
-.value {
-    display: flex;
-
-    justify-content: center;
-    align-items: baseline;
-
-    margin:
-        42px
-        0
-        0;
-
-    flex-shrink: 0;
-
-    white-space: nowrap;
-}
-
-.value strong {
-    font-family:
-        Arial,
-        "Helvetica Neue",
-        Helvetica,
-        sans-serif;
-
-    font-size: 174px;
-    line-height: .88;
-
-    font-weight: 700;
-
-    letter-spacing: -0.04em;
-
-    font-variant-numeric: tabular-nums;
-
-    white-space: nowrap;
-}
-
-.value span {
-    font-size: 46px;
-
-    font-weight: 800;
-
-    margin-left: 12px;
-
-    white-space: nowrap;
-}
-
-
-/* =========================================================
-   定点当たり報告数
-========================================================= */
-
-.caption {
-    font-size: 36px;
-
-    font-weight: 700;
-
-    line-height: 1.25;
-
-    margin-top: 22px;
-
-    flex-shrink: 0;
-
-    white-space: nowrap;
-}
-
-
-/* =========================================================
-   前週比較
-========================================================= */
-
-.trend {
-    font-size: 40px;
-
-    font-weight: 700;
-
-    line-height: 1.2;
-
-    margin-top: 46px;
-
-    font-variant-numeric: tabular-nums;
-
-    flex-shrink: 0;
-
-    white-space: nowrap;
-}
-
-
-/* =========================================================
-   第○週
-========================================================= */
-
-.week {
-    font-size: 29px;
-
-    font-weight: 800;
-
-    line-height: 1.2;
-
-    margin-top: 20px;
-
-    flex-shrink: 0;
-
-    white-space: nowrap;
-}
-
-
-/* =========================================================
-   東京都
-========================================================= */
-
-.tokyo-row {
-    margin-top: 54px;
-
-    padding-top: 26px;
-    padding-bottom: 10px;
-
-    border-top:
-        2px
-        solid
-        rgba(18, 59, 87, .18);
-
-    font-size: 36px;
-
-    font-weight: 700;
-
-    line-height: 1.25;
-
-    flex-shrink: 0;
-
-    white-space: nowrap;
-}
-
-.tokyo-row strong {
-    font-family:
-        Arial,
-        "Helvetica Neue",
-        Helvetica,
-        sans-serif;
-
-    font-size: 50px;
-
-    font-weight: 700;
-
-    font-variant-numeric: tabular-nums;
-
-    letter-spacing: -0.015em;
-}
-
-
-/* =========================================================
-   増減色
-========================================================= */
-
-.trend .up {
-    color: #e31b23;
-}
-
-.trend .down {
-    color: #0582d2;
-}
-
-.trend .same {
-    color: #566977;
-}
-
-
-/* =========================================================
-   非流行
-========================================================= */
-
-.level-normal {
-    border-color: #3ca56b;
-    background: #eef9f2;
-}
-
-.level-normal .level-badge {
-    background: #3ca56b;
-    color: #fff;
-}
-
-
-/* =========================================================
-   流行中
-========================================================= */
-
-.level-epidemic {
-    border-color: #d8b51e;
-    background: #fffbea;
-}
-
-.level-epidemic .level-badge {
-    background: #ffdb58;
-    color: #123b57;
-}
-
-
-/* =========================================================
-   注意報レベル
-========================================================= */
-
-.level-advisory {
-    border-color: #d71920;
-    background: #fff0f0;
-}
-
-.level-advisory .level-badge {
-    background: #d71920;
-    color: #fff;
-}
-
-
-/* =========================================================
-   警報レベル
-========================================================= */
-
-.level-warning {
-    border-color: #7b2cbf;
-    background: #f7effd;
-}
-
-.level-warning .level-badge {
-    background: #7b2cbf;
-    color: #fff;
-}
-
-
-/* =========================================================
-   データ更新状態
-========================================================= */
-
-.data-state {
-    text-align: center;
-
-    font-size: 19px;
-
-    font-weight: 700;
-
-    line-height: 1.25;
-
-    margin-top: auto;
-
-    flex-shrink: 0;
-
-    white-space: nowrap;
-}
-
-
-/* =========================================================
-   出典
-========================================================= */
-
-.source {
-    text-align: center;
-
-    font-size: 14px;
-
-    font-weight: 500;
-
-    line-height: 1.3;
-
-    margin-top: 2px;
-
-    flex-shrink: 0;
-
-    white-space: nowrap;
-}
-
-
-/* =========================================================
-   フッター
-
-   下帯も一段大きく。
-========================================================= */
-
-footer {
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    background: #e8f4fb;
-
-    border-top:
-        1px
-        solid
-        #c7d7e2;
-
-    font-size: 34px;
-
-    font-weight: 800;
-
-    letter-spacing: 0.01em;
-
-    white-space: nowrap;
-}
+</html>
