@@ -1,44 +1,77 @@
+/* =========================================================
+   共通
+========================================================= */
+
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 html,
 body {
-  margin: 0;
-  width: 100%;
-  height: 100%;
+    margin: 0;
+    width: 100%;
+    height: 100%;
 
-  font-family:
-    "BIZ UDPGothic",
-    "Yu Gothic",
-    "YuGothic",
-    "Meiryo",
-    "Noto Sans JP",
-    sans-serif;
+    font-family:
+        "BIZ UDPGothic",
+        "Yu Gothic",
+        "YuGothic",
+        "Meiryo",
+        "Noto Sans JP",
+        sans-serif;
 
-  color: #123b57;
-  background: #f4f9fc;
+    color: #123b57;
+    background: #f4f9fc;
 
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   表示領域
+
+   1920 x 1080 の完成レイアウトを中央配置し、
+   JavaScript側で画面サイズに合わせて全体をscaleする
+========================================================= */
+
+.viewport {
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+    background: #f4f9fc;
 }
 
 
 /* =========================================================
    全体
+
+   ここを1920 x 1080の固定キャンバスとして扱う
 ========================================================= */
 
 .screen {
-  height: 100vh;
+    width: 1920px;
+    height: 1080px;
 
-  display: grid;
+    flex: 0 0 auto;
 
-  grid-template-rows:
-    68px
-    1fr
-    62px;
+    display: grid;
 
-  overflow: hidden;
+    grid-template-rows:
+        68px
+        1fr
+        62px;
+
+    overflow: hidden;
+
+    transform-origin: center center;
 }
 
 
@@ -47,31 +80,31 @@ body {
 ========================================================= */
 
 header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-  background: #e8f4fb;
+    background: #e8f4fb;
 
-  border-bottom:
-    1px
-    solid
-    #c7d7e2;
+    border-bottom:
+        1px
+        solid
+        #c7d7e2;
 
-  padding: 4px;
+    padding: 4px;
 }
 
 header h1 {
-  margin: 0;
+    margin: 0;
 
-  font-size: 42px;
-  line-height: 1;
+    font-size: 42px;
+    line-height: 1;
 
-  font-weight: 700;
+    font-weight: 700;
 
-  letter-spacing: 0.01em;
+    letter-spacing: 0.01em;
 
-  white-space: nowrap;
+    white-space: nowrap;
 }
 
 
@@ -80,21 +113,22 @@ header h1 {
 ========================================================= */
 
 main {
-  display: grid;
+    display: grid;
 
-  grid-template-columns:
-    320px
-    minmax(760px, 1fr)
-    320px;
+    grid-template-columns:
+        320px
+        minmax(760px, 1fr)
+        320px;
 
-  gap: 28px;
+    gap: 28px;
 
-  padding:
-    16px
-    36px
-    10px;
+    padding:
+        16px
+        36px
+        10px;
 
-  min-height: 0;
+    min-width: 0;
+    min-height: 0;
 }
 
 
@@ -103,22 +137,28 @@ main {
 ========================================================= */
 
 .measures {
-  display: grid;
+    display: grid;
 
-  grid-template-rows:
-    1fr
-    1fr;
+    grid-template-rows:
+        1fr
+        1fr;
 
-  gap: 12px;
+    gap: 12px;
 
-  min-height: 0;
+    min-width: 0;
+    min-height: 0;
 }
 
 .measures img {
-  width: 100%;
-  height: 100%;
+    display: block;
 
-  object-fit: contain;
+    width: 100%;
+    height: 100%;
+
+    min-width: 0;
+    min-height: 0;
+
+    object-fit: contain;
 }
 
 
@@ -127,25 +167,27 @@ main {
 ========================================================= */
 
 .status {
-  border:
-    4px
-    solid
-    #7894a8;
+    border:
+        4px
+        solid
+        #7894a8;
 
-  border-radius: 28px;
+    border-radius: 28px;
 
-  padding:
-    20px
-    22px
-    4px;
+    padding:
+        20px
+        22px
+        4px;
 
-  background: #fff;
+    background: #fff;
 
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 
-  min-width: 0;
-  min-height: 0;
+    min-width: 0;
+    min-height: 0;
+
+    overflow: hidden;
 }
 
 
@@ -154,19 +196,20 @@ main {
 ========================================================= */
 
 .disease-grid {
-  display: grid;
+    display: grid;
 
-  grid-template-columns:
-    1fr
-    1fr;
+    grid-template-columns:
+        1fr
+        1fr;
 
-  gap: 24px;
+    gap: 24px;
 
-  flex: 1;
+    flex: 1;
 
-  align-items: stretch;
+    align-items: stretch;
 
-  min-height: 0;
+    min-width: 0;
+    min-height: 0;
 }
 
 
@@ -175,49 +218,53 @@ main {
 ========================================================= */
 
 .disease-card {
-  border:
-    5px
-    solid
-    #7894a8;
+    border:
+        5px
+        solid
+        #7894a8;
 
-  border-radius: 25px;
+    border-radius: 25px;
 
-  background: #fff;
+    background: #fff;
 
-  text-align: center;
+    text-align: center;
 
-  padding:
-    22px
-    18px
-    18px;
+    padding:
+        22px
+        18px
+        18px;
 
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 
-  min-height: 0;
+    min-width: 0;
+    min-height: 0;
 
-  transition:
-    background-color .35s,
-    border-color .35s;
+    overflow: hidden;
+
+    transition:
+        background-color .35s,
+        border-color .35s;
 }
 
 
 /* =========================================================
    疾患名
-   現在の位置を維持
 ========================================================= */
 
 .disease-card h2 {
-  margin: 0;
+    margin: 0;
 
-  font-size: 46px;
-  line-height: 1.08;
+    font-size: 46px;
+    line-height: 1.08;
 
-  font-weight: 700;
+    font-weight: 700;
 
-  letter-spacing: 0.01em;
+    letter-spacing: 0.01em;
 
-  flex-shrink: 0;
+    flex-shrink: 0;
+
+    white-space: nowrap;
 }
 
 
@@ -226,36 +273,38 @@ main {
 ========================================================= */
 
 .level-badge {
-  display: flex;
+    display: flex;
 
-  align-items: center;
-  justify-content: center;
+    align-items: center;
+    justify-content: center;
 
-  align-self: center;
+    align-self: center;
 
-  width: 78%;
-  min-width: 78%;
+    width: 78%;
+    min-width: 78%;
 
-  min-height: 66px;
+    min-height: 66px;
 
-  padding:
-    9px
-    32px;
+    padding:
+        9px
+        32px;
 
-  border-radius: 999px;
+    border-radius: 999px;
 
-  background: #dbe6ed;
+    background: #dbe6ed;
 
-  font-size: 36px;
-  line-height: 1;
+    font-size: 36px;
+    line-height: 1;
 
-  font-weight: 800;
+    font-weight: 800;
 
-  letter-spacing: 0.02em;
+    letter-spacing: 0.02em;
 
-  margin-top: 34px;
+    margin-top: 34px;
 
-  flex-shrink: 0;
+    flex-shrink: 0;
+
+    white-space: nowrap;
 }
 
 
@@ -264,43 +313,48 @@ main {
 ========================================================= */
 
 .value {
-  display: flex;
+    display: flex;
 
-  justify-content: center;
-  align-items: baseline;
+    justify-content: center;
+    align-items: baseline;
 
-  margin:
-    38px
-    0
-    0;
+    margin:
+        38px
+        0
+        0;
 
-  flex-shrink: 0;
+    flex-shrink: 0;
+
+    white-space: nowrap;
 }
 
 .value strong {
-  font-family:
-    Arial,
-    "Helvetica Neue",
-    Helvetica,
-    sans-serif;
+    font-family:
+        Arial,
+        "Helvetica Neue",
+        Helvetica,
+        sans-serif;
 
-  font-size: 162px;
+    font-size: 162px;
+    line-height: .88;
 
-  line-height: .88;
+    font-weight: 700;
 
-  font-weight: 700;
+    letter-spacing: -0.04em;
 
-  letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
 
-  font-variant-numeric: tabular-nums;
+    white-space: nowrap;
 }
 
 .value span {
-  font-size: 42px;
+    font-size: 42px;
 
-  font-weight: 700;
+    font-weight: 700;
 
-  margin-left: 12px;
+    margin-left: 12px;
+
+    white-space: nowrap;
 }
 
 
@@ -309,35 +363,38 @@ main {
 ========================================================= */
 
 .caption {
-  font-size: 32px;
+    font-size: 32px;
 
-  font-weight: 600;
+    font-weight: 600;
 
-  line-height: 1.25;
+    line-height: 1.25;
 
-  margin-top: 18px;
+    margin-top: 18px;
 
-  flex-shrink: 0;
+    flex-shrink: 0;
+
+    white-space: nowrap;
 }
 
 
 /* =========================================================
    前週比較
-   メイン数値を大きくした分、下へ移動
 ========================================================= */
 
 .trend {
-  font-size: 35px;
+    font-size: 35px;
 
-  font-weight: 700;
+    font-weight: 700;
 
-  line-height: 1.2;
+    line-height: 1.2;
 
-  margin-top: 42px;
+    margin-top: 42px;
 
-  font-variant-numeric: tabular-nums;
+    font-variant-numeric: tabular-nums;
 
-  flex-shrink: 0;
+    flex-shrink: 0;
+
+    white-space: nowrap;
 }
 
 
@@ -346,57 +403,63 @@ main {
 ========================================================= */
 
 .week {
-  font-size: 25px;
+    font-size: 25px;
 
-  font-weight: 700;
+    font-weight: 700;
 
-  line-height: 1.2;
+    line-height: 1.2;
 
-  margin-top: 20px;
+    margin-top: 20px;
 
-  flex-shrink: 0;
+    flex-shrink: 0;
+
+    white-space: nowrap;
 }
 
 
 /* =========================================================
    東京都
-   現在の位置・大きさを維持
+
+   autoでカード下部に固定。
+   画面縮小時も配置関係は変えない。
 ========================================================= */
 
 .tokyo-row {
-  margin-top: auto;
+    margin-top: auto;
 
-  padding-top: 22px;
-  padding-bottom: 8px;
+    padding-top: 22px;
+    padding-bottom: 8px;
 
-  border-top:
-    2px
-    solid
-    rgba(18, 59, 87, .18);
+    border-top:
+        2px
+        solid
+        rgba(18, 59, 87, .18);
 
-  font-size: 33px;
+    font-size: 33px;
 
-  font-weight: 600;
+    font-weight: 600;
 
-  line-height: 1.25;
+    line-height: 1.25;
 
-  flex-shrink: 0;
+    flex-shrink: 0;
+
+    white-space: nowrap;
 }
 
 .tokyo-row strong {
-  font-family:
-    Arial,
-    "Helvetica Neue",
-    Helvetica,
-    sans-serif;
+    font-family:
+        Arial,
+        "Helvetica Neue",
+        Helvetica,
+        sans-serif;
 
-  font-size: 44px;
+    font-size: 44px;
 
-  font-weight: 700;
+    font-weight: 700;
 
-  font-variant-numeric: tabular-nums;
+    font-variant-numeric: tabular-nums;
 
-  letter-spacing: -0.015em;
+    letter-spacing: -0.015em;
 }
 
 
@@ -405,15 +468,15 @@ main {
 ========================================================= */
 
 .trend .up {
-  color: #e31b23;
+    color: #e31b23;
 }
 
 .trend .down {
-  color: #0582d2;
+    color: #0582d2;
 }
 
 .trend .same {
-  color: #566977;
+    color: #566977;
 }
 
 
@@ -422,13 +485,13 @@ main {
 ========================================================= */
 
 .level-normal {
-  border-color: #3ca56b;
-  background: #eef9f2;
+    border-color: #3ca56b;
+    background: #eef9f2;
 }
 
 .level-normal .level-badge {
-  background: #3ca56b;
-  color: #fff;
+    background: #3ca56b;
+    color: #fff;
 }
 
 
@@ -437,13 +500,13 @@ main {
 ========================================================= */
 
 .level-epidemic {
-  border-color: #d8b51e;
-  background: #fffbea;
+    border-color: #d8b51e;
+    background: #fffbea;
 }
 
 .level-epidemic .level-badge {
-  background: #ffdb58;
-  color: #123b57;
+    background: #ffdb58;
+    color: #123b57;
 }
 
 
@@ -452,13 +515,13 @@ main {
 ========================================================= */
 
 .level-advisory {
-  border-color: #d71920;
-  background: #fff0f0;
+    border-color: #d71920;
+    background: #fff0f0;
 }
 
 .level-advisory .level-badge {
-  background: #d71920;
-  color: #fff;
+    background: #d71920;
+    color: #fff;
 }
 
 
@@ -467,13 +530,13 @@ main {
 ========================================================= */
 
 .level-warning {
-  border-color: #7b2cbf;
-  background: #f7effd;
+    border-color: #7b2cbf;
+    background: #f7effd;
 }
 
 .level-warning .level-badge {
-  background: #7b2cbf;
-  color: #fff;
+    background: #7b2cbf;
+    color: #fff;
 }
 
 
@@ -482,15 +545,19 @@ main {
 ========================================================= */
 
 .data-state {
-  text-align: center;
+    text-align: center;
 
-  font-size: 18px;
+    font-size: 18px;
 
-  font-weight: 600;
+    font-weight: 600;
 
-  line-height: 1.3;
+    line-height: 1.3;
 
-  margin-top: 4px;
+    margin-top: 4px;
+
+    flex-shrink: 0;
+
+    white-space: nowrap;
 }
 
 
@@ -499,15 +566,19 @@ main {
 ========================================================= */
 
 .source {
-  text-align: center;
+    text-align: center;
 
-  font-size: 13px;
+    font-size: 13px;
 
-  font-weight: 400;
+    font-weight: 400;
 
-  line-height: 1.35;
+    line-height: 1.35;
 
-  margin-top: 1px;
+    margin-top: 1px;
+
+    flex-shrink: 0;
+
+    white-space: nowrap;
 }
 
 
@@ -516,239 +587,23 @@ main {
 ========================================================= */
 
 footer {
-  display: flex;
+    display: flex;
 
-  align-items: center;
-  justify-content: center;
+    align-items: center;
+    justify-content: center;
 
-  background: #e8f4fb;
+    background: #e8f4fb;
 
-  border-top:
-    1px
-    solid
-    #c7d7e2;
+    border-top:
+        1px
+        solid
+        #c7d7e2;
 
-  font-size: 26px;
-
-  font-weight: 600;
-
-  letter-spacing: 0.01em;
-}
-
-
-/* =========================================================
-   1200px以下
-========================================================= */
-
-@media (max-width: 1200px) {
-
-  main {
-    grid-template-columns:
-      220px
-      1fr
-      220px;
-
-    padding-left: 18px;
-    padding-right: 18px;
-
-    gap: 14px;
-  }
-
-  .status {
-    padding:
-      20px
-      14px
-      4px;
-  }
-
-  .disease-grid {
-    gap: 14px;
-  }
-
-  .disease-card {
-    padding:
-      18px
-      12px
-      14px;
-  }
-
-  .disease-card h2 {
-    font-size: 34px;
-  }
-
-  .level-badge {
-    width: 78%;
-    min-width: 78%;
-
-    min-height: 54px;
-
-    padding:
-      7px
-      20px;
-
-    font-size: 29px;
-
-    margin-top: 24px;
-  }
-
-  .value {
-    margin-top: 28px;
-  }
-
-  .value strong {
-    font-size: 108px;
-  }
-
-  .value span {
-    font-size: 32px;
-  }
-
-  .caption {
-    font-size: 24px;
-
-    margin-top: 14px;
-  }
-
-  .trend {
-    font-size: 27px;
-
-    margin-top: 30px;
-  }
-
-  .week {
-    font-size: 20px;
-
-    margin-top: 14px;
-  }
-
-  .tokyo-row {
-    font-size: 25px;
-
-    padding-top: 16px;
-  }
-
-  .tokyo-row strong {
-    font-size: 32px;
-  }
-}
-
-
-/* =========================================================
-   800px以下
-========================================================= */
-
-@media (max-width: 800px) {
-
-  .screen {
-    height: auto;
-    min-height: 100vh;
-
-    grid-template-rows:
-      auto
-      auto
-      auto;
-  }
-
-  header {
-    min-height: 58px;
-  }
-
-  header h1 {
-    font-size:
-      clamp(
-        23px,
-        7vw,
-        34px
-      );
-  }
-
-  main {
-    grid-template-columns: 1fr;
-  }
-
-  .measures {
-    display: none;
-  }
-
-  .status {
-    margin: 10px;
-
-    padding:
-      20px
-      12px
-      6px;
-  }
-
-  .disease-grid {
-    grid-template-columns: 1fr;
-
-    gap: 14px;
-  }
-
-  .disease-card {
-    min-height: 620px;
-
-    padding:
-      22px
-      16px
-      18px;
-  }
-
-  .disease-card h2 {
-    font-size: 36px;
-  }
-
-  .level-badge {
-    min-height: 56px;
-
-    font-size: 30px;
-
-    margin-top: 24px;
-  }
-
-  .value {
-    margin-top: 28px;
-  }
-
-  .value strong {
-    font-size: 104px;
-  }
-
-  .value span {
-    font-size: 32px;
-  }
-
-  .caption {
-    font-size: 25px;
-
-    margin-top: 14px;
-  }
-
-  .trend {
-    font-size: 28px;
-
-    margin-top: 30px;
-  }
-
-  .week {
-    font-size: 21px;
-
-    margin-top: 14px;
-  }
-
-  .tokyo-row {
     font-size: 26px;
-  }
 
-  .tokyo-row strong {
-    font-size: 34px;
-  }
+    font-weight: 600;
 
-  footer {
-    padding: 16px;
+    letter-spacing: 0.01em;
 
-    text-align: center;
-
-    font-size: 20px;
-  }
+    white-space: nowrap;
 }
