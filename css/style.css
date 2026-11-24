@@ -48,7 +48,6 @@ body {
 
 header {
   display: flex;
-
   align-items: center;
   justify-content: center;
 
@@ -125,6 +124,8 @@ main {
 
 /* =========================================================
    中央ステータス外枠
+
+   外枠と内側カードの余白は元の設定を維持
 ========================================================= */
 
 .status {
@@ -135,12 +136,8 @@ main {
 
   border-radius: 28px;
 
-  /*
-    上下余白を従来より縮小して
-    疾患カードそのものを大きくする
-  */
   padding:
-    12px
+    20px
     22px
     4px;
 
@@ -148,11 +145,6 @@ main {
 
   display: flex;
   flex-direction: column;
-
-  /*
-    中央寄せをやめる
-  */
-  justify-content: stretch;
 
   min-width: 0;
   min-height: 0;
@@ -174,9 +166,6 @@ main {
 
   flex: 1;
 
-  /*
-    カードを中央枠の縦いっぱいまで伸ばす
-  */
   align-items: stretch;
 
   min-height: 0;
@@ -184,9 +173,9 @@ main {
 
 
 /* =========================================================
-   疾患カード本体
+   疾患カード
 
-   上端から下端までカード全体を使用する
+   カード内部を上から下まで使用する
 ========================================================= */
 
 .disease-card {
@@ -201,9 +190,6 @@ main {
 
   text-align: center;
 
-  /*
-    枠との最低限の余白だけ残す
-  */
   padding:
     22px
     18px
@@ -213,9 +199,8 @@ main {
   flex-direction: column;
 
   /*
-    以前の center を廃止。
-    疾患名から東京都までを
-    カード全高に広げる。
+    中央に固めず、
+    カード全体へ情報を縦方向に配置
   */
   justify-content: space-between;
 
@@ -248,8 +233,6 @@ main {
 
 /* =========================================================
    流行中 / 非流行の帯
-
-   太く、大きく、遠距離から見やすくする
 ========================================================= */
 
 .level-badge {
@@ -276,9 +259,6 @@ main {
   font-size: 32px;
   line-height: 1;
 
-  /*
-    状態表示は強調する
-  */
   font-weight: 800;
 
   letter-spacing: 0.02em;
@@ -297,9 +277,6 @@ main {
   justify-content: center;
   align-items: baseline;
 
-  /*
-    状態帯との間隔を確保
-  */
   margin:
     14px
     0
@@ -313,18 +290,12 @@ main {
     Helvetica,
     sans-serif;
 
-  /*
-    従来132pxから148pxへ拡大
-  */
   font-size: 148px;
 
   line-height: .88;
 
   font-weight: 700;
 
-  /*
-    大数字が間延びしない程度に詰める
-  */
   letter-spacing: -0.04em;
 
   font-variant-numeric: tabular-nums;
@@ -365,9 +336,6 @@ main {
 
   line-height: 1.2;
 
-  /*
-    定点当たり報告数との間隔を広げる
-  */
   margin-top: 20px;
 
   font-variant-numeric: tabular-nums;
@@ -392,14 +360,10 @@ main {
 /* =========================================================
    東京都
 
-   カード下部をしっかり使用する
+   カード最下部側をしっかり使用する
 ========================================================= */
 
 .tokyo-row {
-  /*
-    残った縦方向の空間を使い、
-    東京都表示を下側へ配置
-  */
   margin-top: auto;
 
   padding-top: 22px;
@@ -524,11 +488,7 @@ main {
 
   line-height: 1.3;
 
-  /*
-    中央カードの高さを最大限確保するため
-    余白を小さくする
-  */
-  margin-top: 3px;
+  margin-top: 4px;
 }
 
 
@@ -543,9 +503,9 @@ main {
 
   font-weight: 400;
 
-  line-height: 1.3;
+  line-height: 1.35;
 
-  margin-top: 0;
+  margin-top: 1px;
 }
 
 
@@ -594,7 +554,7 @@ footer {
 
   .status {
     padding:
-      10px
+      20px
       14px
       4px;
   }
@@ -701,8 +661,11 @@ footer {
   .status {
     margin: 10px;
 
+    /*
+      モバイルでも外側余白を確保
+    */
     padding:
-      12px
+      20px
       12px
       6px;
   }
