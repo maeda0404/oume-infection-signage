@@ -1,1 +1,585 @@
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif;color:#123b57;background:#f4f9fc}.screen{height:100vh;display:grid;grid-template-rows:68px 1fr 62px;overflow:hidden}header{display:flex;align-items:center;justify-content:center;background:#e8f4fb;border-bottom:1px solid #c7d7e2;padding:4px}header h1{font-size:42px;line-height:1;margin:0;font-weight:900;white-space:nowrap}main{display:grid;grid-template-columns:320px minmax(760px,1fr) 320px;gap:28px;padding:16px 36px 10px;min-height:0}.measures{display:grid;grid-template-rows:1fr 1fr;gap:12px;min-height:0}.measures img{width:100%;height:100%;object-fit:contain}.status{border:4px solid #7894a8;border-radius:28px;padding:20px 22px 4px;background:#fff;display:flex;flex-direction:column;justify-content:center;min-width:0}.disease-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;flex:1;min-height:0}.disease-card{border:5px solid #7894a8;border-radius:25px;background:#fff;text-align:center;padding:22px 16px 4px;display:flex;flex-direction:column;justify-content:center;transition:background-color .35s,border-color .35s}.disease-card h2{font-size:40px;margin:0 0 10px}.level-badge{display:inline-block;align-self:center;min-width:70%;padding:5px 28px;border-radius:999px;background:#dbe6ed;font-size:27px;font-weight:900}.value{display:flex;justify-content:center;align-items:baseline;margin:8px 0 4px}.value strong{font-size:132px;line-height:.92;font-weight:900;letter-spacing:-4px}.value span{font-size:34px;font-weight:900;margin-left:10px}.caption{font-size:27px;font-weight:900}.trend{font-size:32px;font-weight:900;margin-top:11px}.week{font-size:21px;font-weight:900;margin-top:4px}.tokyo-row{margin-top:12px;padding-top:10px;padding-bottom:0;border-top:2px solid rgba(18,59,87,.16);font-size:30px;font-weight:900}.tokyo-row strong{font-size:38px}.trend .up{color:#e31b23}.trend .down{color:#0582d2}.trend .same{color:#566977}.level-normal{border-color:#3ca56b;background:#eef9f2}.level-normal .level-badge{background:#3ca56b;color:#fff}.level-epidemic{border-color:#d8b51e;background:#fffbea}.level-epidemic .level-badge{background:#ffdb58;color:#123b57}.level-advisory{border-color:#d71920;background:#fff0f0}.level-advisory .level-badge{background:#d71920;color:#fff}.level-warning{border-color:#7b2cbf;background:#f7effd}.level-warning .level-badge{background:#7b2cbf;color:#fff}.data-state{text-align:center;font-size:18px;font-weight:900;margin-top:4px}.source{text-align:center;font-size:13px;margin-top:1px}footer{display:flex;align-items:center;justify-content:center;background:#e8f4fb;border-top:1px solid #c7d7e2;font-size:26px;font-weight:900}@media(max-width:1200px){main{grid-template-columns:220px 1fr 220px;padding-left:18px;padding-right:18px;gap:14px}.value strong{font-size:88px}.disease-card h2{font-size:31px}}@media(max-width:800px){.screen{height:auto;min-height:100vh;grid-template-rows:auto auto auto}header{min-height:58px}header h1{font-size:clamp(23px,7vw,34px)}main{grid-template-columns:1fr}.measures{display:none}.disease-grid{grid-template-columns:1fr}.status{margin:10px}.value strong{font-size:84px}footer{padding:16px;text-align:center;font-size:20px}}
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+
+  font-family:
+    "BIZ UDPGothic",
+    "Yu Gothic",
+    "YuGothic",
+    "Meiryo",
+    "Noto Sans JP",
+    sans-serif;
+
+  color: #123b57;
+  background: #f4f9fc;
+
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+
+/* =========================================================
+   全体
+========================================================= */
+
+.screen {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 68px 1fr 62px;
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   ヘッダー
+========================================================= */
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #e8f4fb;
+  border-bottom: 1px solid #c7d7e2;
+
+  padding: 4px;
+}
+
+header h1 {
+  margin: 0;
+
+  font-size: 42px;
+  line-height: 1;
+
+  /* 900 → 700 */
+  font-weight: 700;
+
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   メイン
+========================================================= */
+
+main {
+  display: grid;
+  grid-template-columns:
+    320px
+    minmax(760px, 1fr)
+    320px;
+
+  gap: 28px;
+
+  padding:
+    16px
+    36px
+    10px;
+
+  min-height: 0;
+}
+
+
+/* =========================================================
+   左右の啓発画像
+========================================================= */
+
+.measures {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+
+  gap: 12px;
+
+  min-height: 0;
+}
+
+.measures img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+}
+
+
+/* =========================================================
+   中央ステータス
+========================================================= */
+
+.status {
+  border: 4px solid #7894a8;
+  border-radius: 28px;
+
+  padding:
+    20px
+    22px
+    4px;
+
+  background: #fff;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  min-width: 0;
+}
+
+
+/* =========================================================
+   疾患カード
+========================================================= */
+
+.disease-grid {
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap: 24px;
+
+  flex: 1;
+  min-height: 0;
+}
+
+.disease-card {
+  border: 5px solid #7894a8;
+  border-radius: 25px;
+
+  background: #fff;
+
+  text-align: center;
+
+  padding:
+    22px
+    16px
+    4px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  transition:
+    background-color .35s,
+    border-color .35s;
+}
+
+
+/* =========================================================
+   疾患名
+========================================================= */
+
+.disease-card h2 {
+  margin:
+    0
+    0
+    10px;
+
+  font-size: 40px;
+  line-height: 1.15;
+
+  /* 極太をやめる */
+  font-weight: 700;
+
+  letter-spacing: 0.01em;
+}
+
+
+/* =========================================================
+   流行レベル
+========================================================= */
+
+.level-badge {
+  display: inline-block;
+  align-self: center;
+
+  min-width: 70%;
+
+  padding:
+    5px
+    28px;
+
+  border-radius: 999px;
+
+  background: #dbe6ed;
+
+  font-size: 27px;
+
+  /* 900 → 700 */
+  font-weight: 700;
+
+  line-height: 1.25;
+}
+
+
+/* =========================================================
+   メイン数値
+========================================================= */
+
+.value {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+
+  margin:
+    8px
+    0
+    4px;
+}
+
+.value strong {
+  /*
+    数字は日本語フォントではなく、
+    Arial系を優先して潰れを防ぐ。
+  */
+  font-family:
+    Arial,
+    "Helvetica Neue",
+    Helvetica,
+    sans-serif;
+
+  font-size: 132px;
+  line-height: .92;
+
+  /*
+    900だと遠距離で数字の内部が潰れやすい。
+    700でも十分に強く見える。
+  */
+  font-weight: 700;
+
+  letter-spacing: -0.035em;
+
+  font-variant-numeric: tabular-nums;
+}
+
+.value span {
+  font-size: 34px;
+
+  /* 900 → 700 */
+  font-weight: 700;
+
+  margin-left: 10px;
+}
+
+
+/* =========================================================
+   定点当たり報告数
+========================================================= */
+
+.caption {
+  font-size: 27px;
+
+  /*
+    横浜版に近い太さ。
+    小さい文字は900よりこちらの方が読みやすい。
+  */
+  font-weight: 600;
+
+  line-height: 1.35;
+}
+
+
+/* =========================================================
+   前週比較
+========================================================= */
+
+.trend {
+  font-size: 32px;
+
+  /* 900 → 700 */
+  font-weight: 700;
+
+  line-height: 1.25;
+
+  margin-top: 11px;
+
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* =========================================================
+   週番号
+========================================================= */
+
+.week {
+  font-size: 21px;
+
+  /* 900 → 600 */
+  font-weight: 600;
+
+  line-height: 1.3;
+
+  margin-top: 4px;
+}
+
+
+/* =========================================================
+   東京都
+========================================================= */
+
+.tokyo-row {
+  margin-top: 12px;
+
+  padding-top: 10px;
+  padding-bottom: 0;
+
+  border-top:
+    2px
+    solid
+    rgba(18, 59, 87, .16);
+
+  font-size: 30px;
+
+  /* 900 → 600 */
+  font-weight: 600;
+
+  line-height: 1.3;
+}
+
+.tokyo-row strong {
+  font-family:
+    Arial,
+    "Helvetica Neue",
+    Helvetica,
+    sans-serif;
+
+  font-size: 38px;
+
+  font-weight: 700;
+
+  font-variant-numeric: tabular-nums;
+
+  letter-spacing: -0.01em;
+}
+
+
+/* =========================================================
+   増減色
+========================================================= */
+
+.trend .up {
+  color: #e31b23;
+}
+
+.trend .down {
+  color: #0582d2;
+}
+
+.trend .same {
+  color: #566977;
+}
+
+
+/* =========================================================
+   非流行
+========================================================= */
+
+.level-normal {
+  border-color: #3ca56b;
+  background: #eef9f2;
+}
+
+.level-normal .level-badge {
+  background: #3ca56b;
+  color: #fff;
+}
+
+
+/* =========================================================
+   流行中
+========================================================= */
+
+.level-epidemic {
+  border-color: #d8b51e;
+  background: #fffbea;
+}
+
+.level-epidemic .level-badge {
+  background: #ffdb58;
+  color: #123b57;
+}
+
+
+/* =========================================================
+   注意報レベル
+========================================================= */
+
+.level-advisory {
+  border-color: #d71920;
+  background: #fff0f0;
+}
+
+.level-advisory .level-badge {
+  background: #d71920;
+  color: #fff;
+}
+
+
+/* =========================================================
+   警報レベル
+========================================================= */
+
+.level-warning {
+  border-color: #7b2cbf;
+  background: #f7effd;
+}
+
+.level-warning .level-badge {
+  background: #7b2cbf;
+  color: #fff;
+}
+
+
+/* =========================================================
+   データ更新状態
+========================================================= */
+
+.data-state {
+  text-align: center;
+
+  font-size: 18px;
+
+  /* 900 → 600 */
+  font-weight: 600;
+
+  line-height: 1.3;
+
+  margin-top: 4px;
+}
+
+
+/* =========================================================
+   出典
+========================================================= */
+
+.source {
+  text-align: center;
+
+  font-size: 13px;
+
+  /*
+    出典は強調しすぎない。
+  */
+  font-weight: 400;
+
+  line-height: 1.35;
+
+  margin-top: 1px;
+}
+
+
+/* =========================================================
+   フッター
+========================================================= */
+
+footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #e8f4fb;
+
+  border-top:
+    1px
+    solid
+    #c7d7e2;
+
+  font-size: 26px;
+
+  /* 900 → 600 */
+  font-weight: 600;
+
+  letter-spacing: 0.01em;
+}
+
+
+/* =========================================================
+   1200px以下
+========================================================= */
+
+@media (max-width: 1200px) {
+
+  main {
+    grid-template-columns:
+      220px
+      1fr
+      220px;
+
+    padding-left: 18px;
+    padding-right: 18px;
+
+    gap: 14px;
+  }
+
+  .value strong {
+    font-size: 88px;
+  }
+
+  .disease-card h2 {
+    font-size: 31px;
+  }
+}
+
+
+/* =========================================================
+   800px以下
+========================================================= */
+
+@media (max-width: 800px) {
+
+  .screen {
+    height: auto;
+    min-height: 100vh;
+
+    grid-template-rows:
+      auto
+      auto
+      auto;
+  }
+
+  header {
+    min-height: 58px;
+  }
+
+  header h1 {
+    font-size:
+      clamp(
+        23px,
+        7vw,
+        34px
+      );
+  }
+
+  main {
+    grid-template-columns: 1fr;
+  }
+
+  .measures {
+    display: none;
+  }
+
+  .disease-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .status {
+    margin: 10px;
+  }
+
+  .value strong {
+    font-size: 84px;
+  }
+
+  footer {
+    padding: 16px;
+
+    text-align: center;
+
+    font-size: 20px;
+  }
+}
