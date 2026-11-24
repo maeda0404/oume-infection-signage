@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-24 11:00",
+  "updated": "2026-11-24 11:14",
   "sourceStatus": "一部取得失敗：東京都新型コロナ",
   "area": {
     "displayName": "西多摩地域",
@@ -81,7 +81,7 @@
     },
     "tokyoCovid19": {
       "errorType": "ValueError",
-      "errorMessage": "東京都感染症週報から新型コロナの定点当たり報告数を取得できません",
+      "errorMessage": "東京都感染症週報から東京都行の定点当たり報告数を取得できません",
       "fallback": "previousStatus"
     }
   }
