@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-26 03:40",
+  "updated": "2026-11-26 13:59",
   "sourceStatus": "正常",
   "area": {
     "displayName": "西多摩地域",
@@ -9,30 +9,30 @@
     "influenza": {
       "level": "流行中",
       "year": 2026,
-      "week": "第46週",
-      "weekNumber": 46,
-      "period": "11月9日～11月15日",
-      "perSentinel": 5.07,
-      "previousPerSentinel": 3.07,
-      "difference": 2.0,
+      "week": "第47週",
+      "weekNumber": 47,
+      "period": "11月16日～11月22日",
+      "perSentinel": 5.36,
+      "previousPerSentinel": 5.07,
+      "difference": 0.29,
       "trend": "西多摩保健所感染症週報",
       "provisional": true,
       "dataStatus": "取得成功",
-      "sourceUrl": "https://www.hokeniryo.metro.tokyo.lg.jp/documents/d/hokeniryo/2026-11-18-134524-962"
+      "sourceUrl": "https://www.hokeniryo.metro.tokyo.lg.jp/documents/d/hokeniryo/2026-11-25-091657-733"
     },
     "covid19": {
-      "level": "非流行",
+      "level": "流行中",
       "year": 2026,
-      "week": "第46週",
-      "weekNumber": 46,
-      "period": "11月9日～11月15日",
-      "perSentinel": 0.79,
-      "previousPerSentinel": 0.29,
-      "difference": 0.5,
+      "week": "第47週",
+      "weekNumber": 47,
+      "period": "11月16日～11月22日",
+      "perSentinel": 1.0,
+      "previousPerSentinel": 0.79,
+      "difference": 0.21,
       "trend": "西多摩保健所感染症週報",
       "provisional": true,
       "dataStatus": "取得成功",
-      "sourceUrl": "https://www.hokeniryo.metro.tokyo.lg.jp/documents/d/hokeniryo/2026-11-18-134524-962"
+      "sourceUrl": "https://www.hokeniryo.metro.tokyo.lg.jp/documents/d/hokeniryo/2026-11-25-091657-733"
     }
   },
   "tokyo": {
@@ -72,15 +72,15 @@
   },
   "debug": {
     "nishitama": {
-      "reportPageUrl": "https://www.hokeniryo.metro.tokyo.lg.jp/documents/d/hokeniryo/2026-11-18-134524-962",
-      "sourceUrl": "https://www.hokeniryo.metro.tokyo.lg.jp/documents/d/hokeniryo/2026-11-18-134524-962",
+      "reportPageUrl": "https://www.hokeniryo.metro.tokyo.lg.jp/documents/d/hokeniryo/2026-11-25-091657-733",
+      "sourceUrl": "https://www.hokeniryo.metro.tokyo.lg.jp/documents/d/hokeniryo/2026-11-25-091657-733",
       "year": 2026,
-      "week": 46,
-      "period": "11月9日～11月15日",
-      "influenzaValue": 5.07,
-      "influenzaPrevious": 3.07,
-      "covid19Value": 0.79,
-      "covid19Previous": 0.29
+      "week": 47,
+      "period": "11月16日～11月22日",
+      "influenzaValue": 5.36,
+      "influenzaPrevious": 5.07,
+      "covid19Value": 1.0,
+      "covid19Previous": 0.79
     },
     "tokyoCovid19": {
       "sourceUrl": "https://idsc.tmiph.metro.tokyo.lg.jp/assets/weekly/2026/46.pdf",
