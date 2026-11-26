@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-26 13:59",
+  "updated": "2026-11-26 21:20",
   "sourceStatus": "正常",
   "area": {
     "displayName": "西多摩地域",
@@ -39,35 +39,35 @@
     "influenza": {
       "level": "流行中",
       "year": 2026,
-      "week": "第46週",
-      "weekNumber": 46,
-      "period": "11月9日～11月15日",
-      "perSentinel": 7.72,
-      "previousPerSentinel": 7.44,
-      "difference": 0.28,
+      "week": "第47週",
+      "weekNumber": 47,
+      "period": "11月16日～11月22日",
+      "perSentinel": 9.24,
+      "previousPerSentinel": 7.72,
+      "difference": 1.52,
       "trend": "東京都感染症情報センター",
       "provisional": true,
       "dataStatus": "取得成功",
       "sourceUrl": "https://idsc.tmiph.metro.tokyo.lg.jp/assets/diseases/flu/2026/2026hasseidoko.xlsx",
-      "reportedCases": 3234,
-      "sentinelCount": 419,
-      "previousReportedCases": 3117
+      "reportedCases": 3862,
+      "sentinelCount": 418,
+      "previousReportedCases": 3234
     },
     "covid19": {
       "level": "非流行",
       "year": 2026,
-      "week": "第46週",
-      "weekNumber": 46,
-      "period": "11月9日～11月15日",
-      "perSentinel": 0.73,
+      "week": "第47週",
+      "weekNumber": 47,
+      "period": "11月16日～11月22日",
+      "perSentinel": 0.63,
       "previousPerSentinel": 0.73,
-      "difference": 0.0,
+      "difference": -0.1,
       "trend": "東京都感染症週報",
       "provisional": true,
       "dataStatus": "取得成功",
-      "sourceUrl": "https://idsc.tmiph.metro.tokyo.lg.jp/assets/weekly/2026/46.pdf",
-      "reportedCases": 307,
-      "previousSourceUrl": "https://idsc.tmiph.metro.tokyo.lg.jp/assets/weekly/2026/45.pdf"
+      "sourceUrl": "https://idsc.tmiph.metro.tokyo.lg.jp/assets/weekly/2026/47.pdf",
+      "reportedCases": 263,
+      "previousSourceUrl": "https://idsc.tmiph.metro.tokyo.lg.jp/assets/weekly/2026/46.pdf"
     }
   },
   "debug": {
@@ -83,15 +83,15 @@
       "covid19Previous": 0.79
     },
     "tokyoCovid19": {
-      "sourceUrl": "https://idsc.tmiph.metro.tokyo.lg.jp/assets/weekly/2026/46.pdf",
-      "previousSourceUrl": "https://idsc.tmiph.metro.tokyo.lg.jp/assets/weekly/2026/45.pdf",
+      "sourceUrl": "https://idsc.tmiph.metro.tokyo.lg.jp/assets/weekly/2026/47.pdf",
+      "previousSourceUrl": "https://idsc.tmiph.metro.tokyo.lg.jp/assets/weekly/2026/46.pdf",
       "year": 2026,
-      "week": "第46週",
-      "value": 0.73,
+      "week": "第47週",
+      "value": 0.63,
       "previousValue": 0.73,
-      "reportedCases": 307,
-      "fluReference": 7.72,
-      "previousFluReference": 7.44
+      "reportedCases": 263,
+      "fluReference": 9.24,
+      "previousFluReference": 7.72
     }
   }
 }
